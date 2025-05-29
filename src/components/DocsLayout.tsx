@@ -338,13 +338,6 @@ function DocsSidebar({ className }: { className?: string }) {
     <div className={cn("pb-12 w-64 h-full", className)}>
       <div className="space-y-4 py-4 h-full">
         <div className="px-3 py-2 flex-1">
-          <Link to="/" className="flex items-center space-x-2 mb-8">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">P</span>
-            </div>
-            <span className="text-xl font-bold">Docs</span>
-          </Link>
-          
           <div className="mb-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -391,12 +384,6 @@ export default function DocsLayout() {
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
         <div className="lg:hidden">
           <div className="flex items-center justify-between p-4 border-b border-border">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">P</span>
-              </div>
-              <span className="text-xl font-bold">Docs</span>
-            </Link>
             <div className="flex items-center space-x-2">
               <ThemeToggle />
               <SheetTrigger asChild>
@@ -416,13 +403,7 @@ export default function DocsLayout() {
         {/* Desktop sidebar */}
         <div className="hidden lg:flex lg:flex-shrink-0">
           <div className="flex flex-col w-64 border-r border-border bg-card">
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <Link to="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">P</span>
-                </div>
-                <span className="text-xl font-bold">Docs</span>
-              </Link>
+            <div className="flex items-center justify-end p-4 border-b border-border">
               <ThemeToggle />
             </div>
             <div className="flex-1 overflow-y-auto">
