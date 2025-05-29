@@ -24,9 +24,9 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
       /:::(\w+)(?:\[([^\]]*)\]|\{title="([^"]*)"\})?\n([\s\S]*?):::/g,
       (match, type, title1, title2, innerContent) => {
         const title = title1 || title2 || '';
-        console.log(🔍 DEBUGGING: Found callout: type=${type}, title=${title});
+        console.log(`🔍 DEBUGGING: Found callout: type=${type}, title=${title}`);
         // Convert to HTML that ReactMarkdown can process
-        const replacement = <div data-callout="${type}" data-title="${title}">\n\n${innerContent.trim()}\n\n</div>;
+        const replacement = `<div data-callout="${type}" data-title="${title}">\n\n${innerContent.trim()}\n\n</div>`;
         console.log('🔍 DEBUGGING: Callout replacement:', replacement);
         return replacement;
       }
@@ -36,8 +36,8 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
     content = content.replace(
       /:::(\w+)\n([\s\S]*?):::/g,
       (match, type, innerContent) => {
-        console.log(🔍 DEBUGGING: Found simple callout: type=${type});
-        const replacement = <div data-callout="${type}">\n\n${innerContent.trim()}\n\n</div>;
+        console.log(`🔍 DEBUGGING: Found simple callout: type=${type}`);
+        const replacement = `<div data-callout="${type}">\n\n${innerContent.trim()}\n\n</div>`;
         console.log('🔍 DEBUGGING: Simple callout replacement:', replacement);
         return replacement;
       }
@@ -54,7 +54,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
     });
     content = content.replace(/<Step\s+number="(\d+)"(?:\s+title="([^"]*)")?>/gi, (match, number, title) => {
       console.log('🔍 DEBUGGING: Replacing <Step> with HTML div');
-      return <div data-step="${number}" data-step-title="${title || ''}">;
+      return `<div data-step="${number}" data-step-title="${title || ''}">`;
     });
     content = content.replace(/<\/Step>/gi, () => {
       console.log('🔍 DEBUGGING: Replacing </Step> with HTML div close');
@@ -64,7 +64,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
     // Transform ExpandableImage components to HTML
     content = content.replace(/<ExpandableImage\s+src="([^"]*)"(?:\s+alt="([^"]*)")?(?:\s+caption="([^"]*)")?\/>/gi, (match, src, alt, caption) => {
       console.log('🔍 DEBUGGING: Replacing <ExpandableImage> with HTML img');
-      return <img data-expandable="true" src="${src}" alt="${alt || ''}" data-caption="${caption || ''}" />;
+      return `<img data-expandable="true" src="${src}" alt="${alt || ''}" data-caption="${caption || ''}" />`;
     });
 
     console.log('🔍 DEBUGGING: Processed content length:', content.length);
@@ -168,8 +168,65 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             <CustomTableCell {...props}>{children}</CustomTableCell>
           ),
 
-          // ... keep existing code (h1, h2, h3, h4, pre, code, ul, ol, li, blockquote, p, hr components)
-        }}
+          h1: ({ children, ...props }) => (
+            <h1 className="scroll-m-20 text-4xl font-bold tracking-tight" {...props}>
+              {children}
+            </h1>
+          ),
+          h2: ({ children, ...props }) => (
+            <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0" {...props}>
+              {children}
+            </h2>
+          ),
+          h3: ({ children, ...props }) => (
+            <h3 className="scroll-m-20 pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0" {...props}>
+              {children}
+            </h3>
+          ),
+          h4: ({ children, ...props }) => (
+            <h4 className="scroll-m-20 pb-2 text-xl font-semibold tracking-tight transition-colors first:mt-0" {...props}>
+              {children}
+            </h4>
+          ),
+          pre: ({ children, ...props }) => (
+            <pre className="rounded-md border bg-secondary text-sm text-secondary-foreground" {...props}>
+              {children}
+            </pre>
+          ),
+          code: ({ children, ...props }) => (
+            <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold" {...props}>
+              {children}
+            </code>
+          ),
+          ul: ({ children, ...props }) => (
+            <ul className="my-6 ml-6 list-disc [&>li]:mt-2" {...props}>
+              {children}
+            </ul>
+          ),
+          ol: ({ children, ...props }) => (
+            <ol className="my-6 ml-6 list-decimal [&>li]:mt-2" {...props}>
+              {children}
+            </ol>
+          ),
+          li: ({ children, ...props }) => (
+            <li {...props}>
+              {children}
+            </li>
+          ),
+          blockquote: ({ children, ...props }) => (
+            <blockquote className="mt-6 border-l-2 pl-6 italic" {...props}>
+              {children}
+            </blockquote>
+          ),
+          p: ({ children, ...props }) => (
+            <p className="leading-7 [&:not(:first-child)]:mt-6" {...props}>
+              {children}
+            </p>
+          ),
+          hr: ({ ...props }) => (
+            <hr className="my-4 md:my-8" {...props} />
+          ),
+        } as any}
       >
         {processedContent}
       </ReactMarkdown>
