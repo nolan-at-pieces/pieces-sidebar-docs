@@ -99,6 +99,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           [rehypeRaw, { allowDangerousHtml: true }],
           rehypeHighlight
         ]}
+        skipHtml={false}
         components={{
           // Explicit ExpandableImage component handler
           ExpandableImage: ({ src, alt, caption, ...props }: any) => {
@@ -135,14 +136,9 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           },
 
           img: ({ src, alt, ...props }: any) => {
-            if (!src) {
-              console.error('❌ Image source is missing');
-              return null;
-            }
-
             const caption = props['data-caption'] || '';
             console.log('🎯 Rendering ALL <img> tags with ExpandableImageComponent', { src, alt, caption });
-            return <ExpandableImageComponent src={src} alt={alt || ''} caption={caption} {...props} />;
+            return <ExpandableImageComponent src={src || ''} alt={alt || ''} caption={caption} {...props} />;
           },
 
           // Custom link component to use React Router for internal links
