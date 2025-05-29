@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ImageModal } from './ImageModal';
 
 interface ExpandableImageProps {
@@ -14,6 +13,12 @@ export function ExpandableImage({ src, alt, caption, className, ...props }: Expa
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
+  // Reset states when src changes
+  useEffect(() => {
+    setImageError(false);
+    setImageLoaded(false);
+  }, [src]);
+
   console.log('🔍 ExpandableImage rendered with:', { src, alt, caption });
 
   if (!src) {
@@ -25,11 +30,13 @@ export function ExpandableImage({ src, alt, caption, className, ...props }: Expa
     console.error('❌ Image failed to load:', src);
     console.error('Error details:', e);
     setImageError(true);
+    setImageLoaded(false);
   };
 
   const handleImageLoad = () => {
     console.log('✅ Image loaded successfully:', src);
     setImageLoaded(true);
+    setImageError(false);
   };
 
   const handleRetry = () => {

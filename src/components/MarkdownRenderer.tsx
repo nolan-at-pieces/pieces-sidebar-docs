@@ -1,4 +1,5 @@
-import ReactMarkdown from 'react-markdown';
+import React from 'react';
+import ReactMarkdown, { Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
@@ -11,6 +12,15 @@ import { CustomTable, CustomTableHeader, CustomTableBody, CustomTableRow, Custom
 
 interface MarkdownRendererProps {
   content: string;
+}
+
+interface CustomTableComponentProps {
+  children: React.ReactNode;
+  [key: string]: any;
+}
+
+interface CustomComponents extends Components {
+  ExpandableImage?: React.ComponentType<any>;
 }
 
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
@@ -87,7 +97,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           rehypeHighlight
         ]}
         components={{
-          // Explicit ExpandableImage component handler - FIXED: use aliased import
+          // Explicit ExpandableImage component handler
           ExpandableImage: ({ src, alt, caption, ...props }: any) => {
             console.log('🎯 SUCCESS: Rendering ExpandableImage component', { src, alt, caption });
             return <ExpandableImageComponent src={src} alt={alt} caption={caption} {...props} />;
@@ -122,13 +132,47 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           },
 
           img: ({ src, alt, ...props }: any) => {
+            if (!src) {
+              console.error('❌ Image source is missing');
+              return null;
+            }
+
+            // Only use ExpandableImage for images that should be expandable
+            const shouldExpand = props['data-expandable'] === 'true';
             const caption = props['data-caption'] || '';
-            console.log('🎯 Rendering ALL <img> tags with ExpandableImageComponent', { src, alt, caption });
-            return <ExpandableImageComponent src={src || ''} alt={alt || ''} caption={caption} {...props} />;
+            
+            console.log('🎯 Rendering image:', { src, alt, caption, shouldExpand });
+            
+            if (shouldExpand) {
+              return <ExpandableImageComponent 
+                src={src} 
+                alt={alt || ''} 
+                caption={caption} 
+                {...props} 
+              />;
+            }
+            
+            // For regular images, use a standard img tag
+            return (
+              <figure className="my-6">
+                <img
+                  src={src}
+                  alt={alt || ''}
+                  className="rounded-lg shadow-md max-w-full h-auto"
+                  loading="lazy"
+                  {...props}
+                />
+                {caption && (
+                  <figcaption className="mt-2 text-sm text-muted-foreground text-center italic">
+                    {caption}
+                  </figcaption>
+                )}
+              </figure>
+            );
           },
 
           // Custom link component to use React Router for internal links
-          a: ({ href, children, ...props }) => {
+          a: ({ href, children, ...props }: any) => {
             if (href?.startsWith('/')) {
               return (
                 <Link to={href} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" {...props}>
@@ -144,84 +188,84 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           },
 
           // Enhanced table styling using custom components
-          table: ({ children, ...props }) => (
+          table: ({ children, ...props }: CustomTableComponentProps) => (
             <CustomTable {...props}>{children}</CustomTable>
           ),
-          thead: ({ children, ...props }) => (
+          thead: ({ children, ...props }: CustomTableComponentProps) => (
             <CustomTableHeader {...props}>{children}</CustomTableHeader>
           ),
-          tbody: ({ children, ...props }) => (
+          tbody: ({ children, ...props }: CustomTableComponentProps) => (
             <CustomTableBody {...props}>{children}</CustomTableBody>
           ),
-          tr: ({ children, ...props }) => (
+          tr: ({ children, ...props }: CustomTableComponentProps) => (
             <CustomTableRow {...props}>{children}</CustomTableRow>
           ),
-          th: ({ children, ...props }) => (
+          th: ({ children, ...props }: CustomTableComponentProps) => (
             <CustomTableHead {...props}>{children}</CustomTableHead>
           ),
-          td: ({ children, ...props }) => (
+          td: ({ children, ...props }: CustomTableComponentProps) => (
             <CustomTableCell {...props}>{children}</CustomTableCell>
           ),
 
-          h1: ({ children, ...props }) => (
+          h1: ({ children, ...props }: any) => (
             <h1 className="scroll-m-20 text-4xl font-bold tracking-tight" {...props}>
               {children}
             </h1>
           ),
-          h2: ({ children, ...props }) => (
+          h2: ({ children, ...props }: any) => (
             <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0" {...props}>
               {children}
             </h2>
           ),
-          h3: ({ children, ...props }) => (
+          h3: ({ children, ...props }: any) => (
             <h3 className="scroll-m-20 pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0" {...props}>
               {children}
             </h3>
           ),
-          h4: ({ children, ...props }) => (
+          h4: ({ children, ...props }: any) => (
             <h4 className="scroll-m-20 pb-2 text-xl font-semibold tracking-tight transition-colors first:mt-0" {...props}>
               {children}
             </h4>
           ),
-          pre: ({ children, ...props }) => (
+          pre: ({ children, ...props }: any) => (
             <pre className="rounded-md border bg-secondary text-sm text-secondary-foreground" {...props}>
               {children}
             </pre>
           ),
-          code: ({ children, ...props }) => (
+          code: ({ children, ...props }: any) => (
             <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold" {...props}>
               {children}
             </code>
           ),
-          ul: ({ children, ...props }) => (
+          ul: ({ children, ...props }: any) => (
             <ul className="my-6 ml-6 list-disc [&>li]:mt-2" {...props}>
               {children}
             </ul>
           ),
-          ol: ({ children, ...props }) => (
+          ol: ({ children, ...props }: any) => (
             <ol className="my-6 ml-6 list-decimal [&>li]:mt-2" {...props}>
               {children}
             </ol>
           ),
-          li: ({ children, ...props }) => (
+          li: ({ children, ...props }: any) => (
             <li {...props}>
               {children}
             </li>
           ),
-          blockquote: ({ children, ...props }) => (
+          blockquote: ({ children, ...props }: any) => (
             <blockquote className="mt-6 border-l-2 pl-6 italic" {...props}>
               {children}
             </blockquote>
           ),
-          p: ({ children, ...props }) => (
+          p: ({ children, ...props }: any) => (
             <p className="leading-7 [&:not(:first-child)]:mt-6" {...props}>
               {children}
             </p>
           ),
-          hr: ({ ...props }) => (
+          hr: ({ ...props }: any) => (
             <hr className="my-4 md:my-8" {...props} />
           ),
-        } as any}
+        } as CustomComponents}
       >
         {processedContent}
       </ReactMarkdown>
