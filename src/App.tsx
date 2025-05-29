@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +9,18 @@ import Index from "./pages/Index";
 import DocsLayout from "./components/DocsLayout";
 import { DynamicDocPage } from "./components/DynamicDocPage";
 import NotFound from "./pages/NotFound";
+
+// Import existing page components
+import GettingStarted from "./pages/docs/GettingStarted";
+import Installation from "./pages/docs/Installation";
+import QuickStart from "./pages/docs/QuickStart";
+import ApiReference from "./pages/docs/ApiReference";
+import Integrations from "./pages/docs/Integrations";
+import Examples from "./pages/docs/Examples";
+import MeetPieces from "./pages/docs/MeetPieces";
+import Troubleshooting from "./pages/docs/Troubleshooting";
+import QuickGuides from "./pages/docs/QuickGuides";
+import LongTermMemoryGuide from "./pages/docs/LongTermMemoryGuide";
 
 const queryClient = new QueryClient();
 
