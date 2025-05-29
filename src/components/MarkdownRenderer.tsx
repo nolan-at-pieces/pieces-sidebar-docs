@@ -1,4 +1,5 @@
 
+
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -121,14 +122,16 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             const isExpandable = props['data-expandable'];
             const caption = props['data-caption'];
             
-            console.log('🔍 DEBUGGING: img component called with:', { src, alt, isExpandable, caption });
+            console.log('🔍 DEBUGGING: img component called with:', { src, alt, isExpandable, caption, props });
             
             if (isExpandable) {
               console.log('🎯 SUCCESS: Rendering ExpandableImage component');
-              return <ExpandableImage src={src} alt={alt} caption={caption} {...props} />;
+              return <ExpandableImage src={src} alt={alt} caption={caption} />;
             }
             
-            return <ExpandableImage src={src} alt={alt} {...props} />;
+            // For regular markdown images, render with ExpandableImage but without special expandable behavior
+            console.log('🎯 SUCCESS: Rendering regular image as ExpandableImage');
+            return <ExpandableImage src={src} alt={alt} />;
           },
 
           // Custom link component to use React Router for internal links
@@ -244,3 +247,4 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
     </div>
   );
 }
+
