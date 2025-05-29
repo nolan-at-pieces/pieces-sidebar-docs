@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -403,7 +404,13 @@ export default function DocsLayout() {
         {/* Desktop sidebar */}
         <div className="hidden lg:flex lg:flex-shrink-0">
           <div className="flex flex-col w-64 border-r border-border bg-card">
-            <div className="flex items-center justify-end p-4 border-b border-border">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <Link to="/" className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">P</span>
+                </div>
+                <span className="text-xl font-bold">Docs</span>
+              </Link>
               <ThemeToggle />
             </div>
             <div className="flex-1 overflow-y-auto">
