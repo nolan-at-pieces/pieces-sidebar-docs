@@ -164,10 +164,130 @@ const navigation = [
     href: "/docs/extensions-plugins",
     isSection: true,
     items: [
-      { title: "Visual Studio Code", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code" },
-      { title: "JetBrains", href: "/docs/extensions-plugins/extensions-plugins/jetbrains" },
-      { title: "Visual Studio", href: "/docs/extensions-plugins/extensions-plugins/visual-studio" },
-      { title: "Sublime Text", href: "/docs/extensions-plugins/extensions-plugins/sublime" },
+      {
+        title: "Visual Studio Code",
+        href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code",
+        items: [
+          { title: "Get Started", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/get-started" },
+          { title: "Commands", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/commands" },
+          { title: "Configuration", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/configuration" },
+          {
+            title: "Pieces Copilot",
+            href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/copilot",
+            items: [
+              { title: "Chat", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/copilot/chat" },
+              { title: "Debugging Errors", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/copilot/debugging-errors" },
+              { title: "Documenting Code", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/copilot/documenting-code" },
+              { title: "LLM Settings", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/copilot/llm-settings" },
+              { title: "Refactoring", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/copilot/refactoring" },
+            ],
+          },
+          {
+            title: "Pieces Drive",
+            href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/drive",
+            items: [
+              { title: "Edit & Update", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/drive/edit-update" },
+              { title: "Save Snippets", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/drive/save-snippets" },
+              { title: "Search & Reuse", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/drive/search-reuse" },
+              { title: "Sharing", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/drive/sharing" },
+            ],
+          },
+          { title: "Forks", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/forks" },
+          { title: "Troubleshooting", href: "/docs/extensions-plugins/extensions-plugins/visual-studio-code/troubleshooting" },
+        ],
+      },
+      {
+        title: "JetBrains",
+        href: "/docs/extensions-plugins/extensions-plugins/jetbrains",
+        items: [
+          { title: "Get Started", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/get-started" },
+          { title: "Commands", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/commands" },
+          { title: "Configuration", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/configuration" },
+          {
+            title: "Pieces Copilot",
+            href: "/docs/extensions-plugins/extensions-plugins/jetbrains/copilot",
+            items: [
+              { title: "Chat", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/copilot/chat" },
+              { title: "Debugging Errors", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/copilot/debugging-errors" },
+              { title: "Documenting Code", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/copilot/documenting-code" },
+              { title: "LLM Settings", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/copilot/llm-settings" },
+              { title: "Refactoring", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/copilot/refactoring" },
+            ],
+          },
+          {
+            title: "Pieces Drive",
+            href: "/docs/extensions-plugins/extensions-plugins/jetbrains/drive",
+            items: [
+              { title: "Edit & Update", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/drive/edit-update" },
+              { title: "Save Snippets", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/drive/save-snippets" },
+              { title: "Search & Reuse", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/drive/search-reuse" },
+              { title: "Sharing", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/drive/sharing" },
+            ],
+          },
+          { title: "Troubleshooting", href: "/docs/extensions-plugins/extensions-plugins/jetbrains/troubleshooting" },
+        ],
+      },
+      {
+        title: "Visual Studio",
+        href: "/docs/extensions-plugins/extensions-plugins/visual-studio",
+        items: [
+          { title: "Get Started", href: "/docs/extensions-plugins/extensions-plugins/visual-studio/get-started" },
+          { title: "Commands", href: "/docs/extensions-plugins/extensions-plugins/visual-studio/commands" },
+          { title: "Configuration", href: "/docs/extensions-plugins/extensions-plugins/visual-studio/configuration" },
+          {
+            title: "Pieces Copilot",
+            href: "/docs/extensions-plugins/extensions-plugins/visual-studio/copilot",
+            items: [
+              { title: "Chat", href: "/docs/extensions-plugins/extensions-plugins/visual-studio/copilot/chat" },
+              { title: "Documenting Code", href: "/docs/extensions-plugins/extensions-plugins/visual-studio/copilot/documenting-code" },
+              { title: "LLM Settings", href: "/docs/extensions-plugins/extensions-plugins/visual-studio/copilot/llm-settings" },
+              { title: "Refactoring", href: "/docs/extensions-plugins/extensions-plugins/visual-studio/copilot/refactoring" },
+            ],
+          },
+          {
+            title: "Pieces Drive",
+            href: "/docs/extensions-plugins/extensions-plugins/visual-studio/drive",
+            items: [
+              { title: "Edit & Update", href: "/docs/extensions-plugins/extensions-plugins/visual-studio/drive/edit-update" },
+              { title: "Save Snippets", href: "/docs/extensions-plugins/extensions-plugins/visual-studio/drive/save-snippets" },
+              { title: "Search & Reuse", href: "/docs/extensions-plugins/extensions-plugins/visual-studio/drive/search-reuse" },
+              { title: "Sharing", href: "/docs/extensions-plugins/extensions-plugins/visual-studio/drive/sharing" },
+            ],
+          },
+          { title: "Troubleshooting", href: "/docs/extensions-plugins/extensions-plugins/visual-studio/troubleshooting" },
+        ],
+      },
+      {
+        title: "Sublime Text",
+        href: "/docs/extensions-plugins/extensions-plugins/sublime",
+        items: [
+          { title: "Get Started", href: "/docs/extensions-plugins/extensions-plugins/sublime/get-started" },
+          { title: "Commands", href: "/docs/extensions-plugins/extensions-plugins/sublime/commands" },
+          { title: "Configuration", href: "/docs/extensions-plugins/extensions-plugins/sublime/configuration" },
+          {
+            title: "Pieces Copilot",
+            href: "/docs/extensions-plugins/extensions-plugins/sublime/copilot",
+            items: [
+              { title: "Chat", href: "/docs/extensions-plugins/extensions-plugins/sublime/copilot/chat" },
+              { title: "Debugging Errors", href: "/docs/extensions-plugins/extensions-plugins/sublime/copilot/debugging-errors" },
+              { title: "Documenting Code", href: "/docs/extensions-plugins/extensions-plugins/sublime/copilot/documenting-code" },
+              { title: "LLM Settings", href: "/docs/extensions-plugins/extensions-plugins/sublime/copilot/llm-settings" },
+              { title: "Refactoring", href: "/docs/extensions-plugins/extensions-plugins/sublime/copilot/refactoring" },
+            ],
+          },
+          {
+            title: "Pieces Drive",
+            href: "/docs/extensions-plugins/extensions-plugins/sublime/drive",
+            items: [
+              { title: "Edit & Update", href: "/docs/extensions-plugins/extensions-plugins/sublime/drive/edit-update" },
+              { title: "Save Snippets", href: "/docs/extensions-plugins/extensions-plugins/sublime/drive/save-snippets" },
+              { title: "Search & Reuse", href: "/docs/extensions-plugins/extensions-plugins/sublime/drive/search-reuse" },
+              { title: "Sharing", href: "/docs/extensions-plugins/extensions-plugins/sublime/drive/sharing" },
+            ],
+          },
+          { title: "Troubleshooting", href: "/docs/extensions-plugins/extensions-plugins/sublime/troubleshooting" },
+        ],
+      },
       { title: "JupyterLab", href: "/docs/extensions-plugins/extensions-plugins/jupyterlab" },
       { title: "Neovim Plugin", href: "/docs/extensions-plugins/extensions-plugins/neovim-plugin" },
     ],
@@ -177,9 +297,90 @@ const navigation = [
     href: "/docs/productivity",
     isSection: true,
     items: [
-      { title: "Obsidian", href: "/docs/obsidian" },
-      { title: "Web Extension", href: "/docs/web-extension" },
-      { title: "Pieces CLI", href: "/docs/cli" },
+      {
+        title: "Obsidian",
+        href: "/docs/obsidian",
+        items: [
+          { title: "Get Started", href: "/docs/obsidian/get-started" },
+          { title: "Commands", href: "/docs/obsidian/commands" },
+          { title: "Configuration", href: "/docs/obsidian/configuration" },
+          {
+            title: "Pieces Copilot",
+            href: "/docs/obsidian/copilot",
+            items: [
+              { title: "Chat", href: "/docs/obsidian/copilot/chat" },
+              { title: "LLM Settings", href: "/docs/obsidian/copilot/llm-settings" },
+            ],
+          },
+          {
+            title: "Pieces Drive",
+            href: "/docs/obsidian/drive",
+            items: [
+              { title: "Edit & Update", href: "/docs/obsidian/drive/edit-update" },
+              { title: "Save Snippets", href: "/docs/obsidian/drive/save-snippets" },
+              { title: "Search & Reuse", href: "/docs/obsidian/drive/search-reuse" },
+              { title: "Sharing", href: "/docs/obsidian/drive/sharing" },
+            ],
+          },
+          { title: "Troubleshooting", href: "/docs/obsidian/troubleshooting" },
+        ],
+      },
+      {
+        title: "Web Extension",
+        href: "/docs/web-extension",
+        items: [
+          { title: "Get Started", href: "/docs/web-extension/get-started" },
+          { title: "Configuration", href: "/docs/web-extension/configuration" },
+          { title: "Shortcuts", href: "/docs/web-extension/shortcuts" },
+          {
+            title: "Pieces Copilot",
+            href: "/docs/web-extension/copilot",
+            items: [
+              { title: "Chat", href: "/docs/web-extension/copilot/chat" },
+              { title: "LLM Settings", href: "/docs/web-extension/copilot/llm-settings" },
+            ],
+          },
+          {
+            title: "Pieces Drive",
+            href: "/docs/web-extension/drive",
+            items: [
+              { title: "Edit & Update", href: "/docs/web-extension/drive/edit-update" },
+              { title: "Save Snippets", href: "/docs/web-extension/drive/save-snippets" },
+              { title: "Search & Reuse", href: "/docs/web-extension/drive/search-reuse" },
+              { title: "Sharing", href: "/docs/web-extension/drive/sharing" },
+            ],
+          },
+          { title: "Troubleshooting", href: "/docs/web-extension/troubleshooting" },
+        ],
+      },
+      {
+        title: "Pieces CLI",
+        href: "/docs/cli",
+        items: [
+          { title: "Get Started", href: "/docs/cli/get-started" },
+          { title: "Commands", href: "/docs/cli/commands" },
+          { title: "Configuration", href: "/docs/cli/configuration" },
+          {
+            title: "Pieces Copilot",
+            href: "/docs/cli/copilot",
+            items: [
+              { title: "Chat", href: "/docs/cli/copilot/chat" },
+              { title: "LLMs Settings", href: "/docs/cli/copilot/llms-settings" },
+            ],
+          },
+          {
+            title: "Pieces Drive",
+            href: "/docs/cli/drive",
+            items: [
+              { title: "Edit & Update", href: "/docs/cli/drive/edit-and-update" },
+              { title: "Saving Materials", href: "/docs/cli/drive/saving-materials" },
+              { title: "Search & Reuse", href: "/docs/cli/drive/search-and-reuse" },
+              { title: "Sharing", href: "/docs/cli/drive/sharing" },
+            ],
+          },
+          { title: "Troubleshooting", href: "/docs/cli/troubleshooting" },
+        ],
+      },
       { title: "Raycast", href: "/docs/raycast" },
     ],
   },
