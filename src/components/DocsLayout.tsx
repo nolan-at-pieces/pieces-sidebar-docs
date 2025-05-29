@@ -7,13 +7,9 @@ import { Menu, Search, ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { navigation, NavItem } from "@/lib/navigation";
 
-const navigation = [
-  {
-    title: "Meet Pieces",
-    href: "/docs/meet-pieces",
-    isBold: true,
-    items: [
+function DocsSidebar({ className }: { className?: string }) {
       { title: "Fundamentals", href: "/docs/meet-pieces/fundamentals" },
       { title: "Installation Guide | Windows", href: "/docs/meet-pieces/installation-windows" },
       { title: "Installation Guide | macOS", href: "/docs/meet-pieces/installation-macos" },
@@ -204,12 +200,6 @@ const navigation = [
     href: null,
     isSection: true,
     items: [
-      { title: "Support", href: "/docs/help/support" },
-    ],
-  },
-];
-
-function DocsSidebar({ className }: { className?: string }) {
   const location = useLocation();
   const [openSections, setOpenSections] = useState<string[]>([
     "Meet Pieces", 
@@ -234,7 +224,7 @@ function DocsSidebar({ className }: { className?: string }) {
   const isActive = (href: string) => location.pathname === href;
   const isSectionOpen = (sectionTitle: string) => openSections.includes(sectionTitle);
 
-  const filterItems = (items: any[], searchTerm: string): any[] => {
+  const filterItems = (items: NavItem[], searchTerm: string): NavItem[] => {
     return items.filter(item => {
       const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
       if (item.items) {
@@ -263,7 +253,7 @@ function DocsSidebar({ className }: { className?: string }) {
       )
     : navigation;
 
-  const renderNavItem = (item: any, depth = 0) => {
+  const renderNavItem = (item: NavItem, depth = 0) => {
     const hasSubItems = item.items && item.items.length > 0;
     const paddingClass = depth === 0 ? "px-3" : depth === 1 ? "px-6" : depth === 2 ? "px-9" : "px-12";
 
