@@ -6,6 +6,32 @@ sidebarTitle: "Fundamentals"
 
 ---
 
+# Getting Started
+
+:::info[Welcome]
+Welcome to our documentation! Follow these steps to get started.
+:::
+
+<Steps>
+<Step number="1" title="Install the Application">
+Download and install from our website.
+
+![Installation Screenshot](https://example.com/install.png)
+</Step>
+
+<Step number="2" title="Configure Settings">
+Set up your preferences in the settings panel.
+</Step>
+</Steps>
+
+:::tip[Pro Tip]
+You can always return to these settings later from the main menu.
+:::
+
+:::warning
+Make sure to backup your data before proceeding with the installation.
+:::
+
 ## The Pillars
 
 Pieces powers developers to new levels of productivity by introducing the **[1] Long-Term Memory Engine (LTM-2)**, a powerful “artificial memory” that remembers your workflow and automatically saves context for future use.
