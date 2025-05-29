@@ -174,7 +174,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           hr: ({ ...props }) => (
             <hr className="my-8 border-gray-300 dark:border-gray-600" {...props} />
           ),
-        }}
+        } as any}
       >
         {processedContent}
       </ReactMarkdown>
