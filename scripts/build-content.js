@@ -1,7 +1,11 @@
 
-const fs = require('fs');
-const path = require('path');
-const matter = require('gray-matter');
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Build content index for faster loading
 function buildContentIndex() {
@@ -86,8 +90,7 @@ function buildContentIndex() {
   console.log('\n✅ Content index ready!\n');
 }
 
-if (require.main === module) {
-  buildContentIndex();
-}
+// Run the build
+buildContentIndex();
 
-module.exports = { buildContentIndex };
+export { buildContentIndex };
