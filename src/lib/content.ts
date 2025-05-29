@@ -1,6 +1,4 @@
 
-import matter from 'gray-matter';
-
 export interface ContentMetadata {
   title: string;
   description?: string;
@@ -15,24 +13,33 @@ export interface ContentPage {
   content: string;
 }
 
-// This will be populated at build time or dynamically loaded
-let contentCache: Map<string, ContentPage> = new Map();
+// Content index cache
+let contentIndex: Record<string, ContentPage> | null = null;
+
+export async function loadContentIndex(): Promise<Record<string, ContentPage>> {
+  if (contentIndex) {
+    return contentIndex;
+  }
+  
+  try {
+    const response = await fetch('/content-index.json');
+    if (!response.ok) {
+      console.error('Failed to load content index:', response.status);
+      return {};
+    }
+    
+    contentIndex = await response.json();
+    return contentIndex || {};
+  } catch (error) {
+    console.error('Error loading content index:', error);
+    return {};
+  }
+}
 
 export async function loadMarkdownContent(path: string): Promise<ContentPage | null> {
   try {
-    // In a real implementation, this would load from the file system
-    // For now, we'll simulate loading content
-    const response = await fetch(`/content${path}.md`);
-    if (!response.ok) return null;
-    
-    const markdown = await response.text();
-    const { data, content } = matter(markdown);
-    
-    return {
-      slug: path,
-      metadata: data as ContentMetadata,
-      content
-    };
+    const index = await loadContentIndex();
+    return index[path] || null;
   } catch (error) {
     console.error('Error loading content:', error);
     return null;
@@ -40,15 +47,11 @@ export async function loadMarkdownContent(path: string): Promise<ContentPage | n
 }
 
 export function getContentFromCache(path: string): ContentPage | null {
-  return contentCache.get(path) || null;
-}
-
-export function setContentCache(content: Map<string, ContentPage>) {
-  contentCache = content;
+  if (!contentIndex) return null;
+  return contentIndex[path] || null;
 }
 
 export async function getAllContent(): Promise<ContentPage[]> {
-  // This would typically scan the content directory
-  // For now, return empty array - will be implemented based on actual content
-  return Array.from(contentCache.values());
+  const index = await loadContentIndex();
+  return Object.values(index);
 }

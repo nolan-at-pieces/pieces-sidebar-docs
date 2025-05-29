@@ -9,7 +9,8 @@ function buildContentIndex() {
   const outputFile = path.join(__dirname, '../public/content-index.json');
   
   if (!fs.existsSync(contentDir)) {
-    console.log('Content directory not found, skipping content indexing');
+    console.log('Content directory not found, creating empty content index');
+    fs.writeFileSync(outputFile, JSON.stringify({}, null, 2));
     return;
   }
   
@@ -25,18 +26,28 @@ function buildContentIndex() {
       if (stat.isDirectory()) {
         processDirectory(itemPath, path.join(basePath, item));
       } else if (item.endsWith('.md')) {
-        const content = fs.readFileSync(itemPath, 'utf8');
-        const { data, content: markdown } = matter(content);
-        
-        const slug = path.join(basePath, item.replace('.md', ''));
-        const normalizedSlug = '/' + slug.replace(/\\/g, '/');
-        
-        contentIndex[normalizedSlug] = {
-          slug: normalizedSlug,
-          metadata: data,
-          content: markdown,
-          lastModified: stat.mtime.toISOString()
-        };
+        try {
+          const content = fs.readFileSync(itemPath, 'utf8');
+          const { data, content: markdown } = matter(content);
+          
+          const slug = path.join(basePath, item.replace('.md', ''));
+          const normalizedSlug = '/' + slug.replace(/\\/g, '/');
+          
+          contentIndex[normalizedSlug] = {
+            slug: normalizedSlug,
+            metadata: {
+              title: data.title || 'Untitled',
+              description: data.description,
+              author: data.author,
+              lastModified: data.lastModified || stat.mtime.toISOString(),
+              order: data.order
+            },
+            content: markdown,
+            lastModified: stat.mtime.toISOString()
+          };
+        } catch (error) {
+          console.error(`Error processing ${itemPath}:`, error.message);
+        }
       }
     });
   }
