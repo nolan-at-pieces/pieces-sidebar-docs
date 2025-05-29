@@ -1,4 +1,3 @@
-
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -17,15 +16,18 @@ interface MarkdownRendererProps {
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
   // Parse custom callout syntax and normalize component names
   const processCustomSyntax = (content: string) => {
-    console.log('Processing custom syntax for content:', content.substring(0, 200));
+    console.log('🔍 DEBUGGING: Original content length:', content.length);
+    console.log('🔍 DEBUGGING: Original content preview:', content.substring(0, 500));
     
     // Transform callout syntax: :::info[Title] or :::warning{title="Warning"}
     content = content.replace(
       /:::(\w+)(?:\[([^\]]*)\]|\{title="([^"]*)"\})?\n([\s\S]*?):::/g,
       (match, type, title1, title2, innerContent) => {
         const title = title1 || title2 || '';
-        console.log(`Found callout: type=${type}, title=${title}`);
-        return `<Callout type="${type}" title="${title}">\n\n${innerContent.trim()}\n\n</Callout>`;
+        console.log(`🔍 DEBUGGING: Found callout: type=${type}, title=${title}`);
+        const replacement = `<Callout type="${type}" title="${title}">\n\n${innerContent.trim()}\n\n</Callout>`;
+        console.log('🔍 DEBUGGING: Callout replacement:', replacement);
+        return replacement;
       }
     );
 
@@ -33,33 +35,86 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
     content = content.replace(
       /:::(\w+)\n([\s\S]*?):::/g,
       (match, type, innerContent) => {
-        console.log(`Found simple callout: type=${type}`);
-        return `<Callout type="${type}">\n\n${innerContent.trim()}\n\n</Callout>`;
+        console.log(`🔍 DEBUGGING: Found simple callout: type=${type}`);
+        const replacement = `<Callout type="${type}">\n\n${innerContent.trim()}\n\n</Callout>`;
+        console.log('🔍 DEBUGGING: Simple callout replacement:', replacement);
+        return replacement;
       }
     );
 
     // Transform Steps and Step components to uppercase
-    content = content.replace(/<steps>/gi, '<Steps>');
-    content = content.replace(/<\/steps>/gi, '</Steps>');
-    content = content.replace(/<step\s/gi, '<Step ');
-    content = content.replace(/<\/step>/gi, '</Step>');
+    content = content.replace(/<steps>/gi, (match) => {
+      console.log('🔍 DEBUGGING: Replacing <steps> with <Steps>');
+      return '<Steps>';
+    });
+    content = content.replace(/<\/steps>/gi, (match) => {
+      console.log('🔍 DEBUGGING: Replacing </steps> with </Steps>');
+      return '</Steps>';
+    });
+    content = content.replace(/<step\s/gi, (match) => {
+      console.log('🔍 DEBUGGING: Replacing <step with <Step');
+      return '<Step ';
+    });
+    content = content.replace(/<\/step>/gi, (match) => {
+      console.log('🔍 DEBUGGING: Replacing </step> with </Step>');
+      return '</Step>';
+    });
 
     // Transform ExpandableImage components
-    content = content.replace(/<expandableimage\s/gi, '<ExpandableImage ');
-    content = content.replace(/<\/expandableimage>/gi, '</ExpandableImage>');
+    content = content.replace(/<expandableimage\s/gi, (match) => {
+      console.log('🔍 DEBUGGING: Replacing <expandableimage with <ExpandableImage');
+      return '<ExpandableImage ';
+    });
+    content = content.replace(/<\/expandableimage>/gi, (match) => {
+      console.log('🔍 DEBUGGING: Replacing </expandableimage> with </ExpandableImage>');
+      return '</ExpandableImage>';
+    });
 
-    console.log('Processed content:', content.substring(0, 300));
+    console.log('🔍 DEBUGGING: Processed content length:', content.length);
+    console.log('🔍 DEBUGGING: Processed content preview:', content.substring(0, 800));
+    console.log('🔍 DEBUGGING: Looking for custom tags in processed content...');
+    
+    // Check if custom tags are present
+    const hasCallout = content.includes('<Callout');
+    const hasSteps = content.includes('<Steps');
+    const hasStep = content.includes('<Step');
+    const hasExpandableImage = content.includes('<ExpandableImage');
+    
+    console.log('🔍 DEBUGGING: Custom tags found:', {
+      hasCallout,
+      hasSteps,
+      hasStep,
+      hasExpandableImage
+    });
+
     return content;
   };
 
   const processedContent = processCustomSyntax(content);
+  
+  console.log('🔍 DEBUGGING: Final content being passed to ReactMarkdown:');
+  console.log(processedContent);
 
   return (
     <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:scroll-mt-20">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeHighlight, rehypeRaw]}
+        rehypePlugins={[
+          rehypeHighlight,
+          [rehypeRaw, { 
+            passThrough: ['Callout', 'Steps', 'Step', 'ExpandableImage'],
+            allowDangerousHtml: true 
+          }]
+        ]}
         components={{
+          // Test component to verify the pipeline works
+          div: ({ children, ...props }) => {
+            if (props.className === 'test-custom') {
+              console.log('🔍 DEBUGGING: Test div component rendered!', props);
+            }
+            return <div {...props}>{children}</div>;
+          },
+
           // Custom link component to use React Router for internal links
           a: ({ href, children, ...props }) => {
             if (href?.startsWith('/')) {
@@ -81,24 +136,45 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             <ExpandableImage src={src} alt={alt} {...props} />
           ),
 
-          // Custom components - properly registered with ReactMarkdown
+          // Custom components with extensive debugging
           Callout: ({ type, title, children, ...props }: any) => {
-            console.log('Rendering Callout component:', { type, title });
+            console.log('🎯 SUCCESS: Callout component called with:', { 
+              type, 
+              title, 
+              children: typeof children, 
+              props,
+              childrenContent: children?.toString?.()?.substring(0, 100)
+            });
             return <Callout type={type} title={title} {...props}>{children}</Callout>;
           },
 
           Steps: ({ children, ...props }: any) => {
-            console.log('Rendering Steps component');
+            console.log('🎯 SUCCESS: Steps component called with:', { 
+              children: typeof children, 
+              props,
+              childrenLength: Array.isArray(children) ? children.length : 'not array'
+            });
             return <Steps {...props}>{children}</Steps>;
           },
 
           Step: ({ number, title, children, ...props }: any) => {
-            console.log('Rendering Step component:', { number, title });
+            console.log('🎯 SUCCESS: Step component called with:', { 
+              number, 
+              title, 
+              children: typeof children, 
+              props,
+              parsedNumber: parseInt(number)
+            });
             return <Step number={parseInt(number)} title={title} {...props}>{children}</Step>;
           },
 
           ExpandableImage: ({ src, alt, caption, ...props }: any) => {
-            console.log('Rendering ExpandableImage component:', { src, alt });
+            console.log('🎯 SUCCESS: ExpandableImage component called with:', { 
+              src, 
+              alt, 
+              caption, 
+              props 
+            });
             return <ExpandableImage src={src} alt={alt} caption={caption} {...props} />;
           },
 
@@ -122,6 +198,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             <CustomTableCell {...props}>{children}</CustomTableCell>
           ),
 
+          // ... keep existing code (h1, h2, h3, h4, pre, code, ul, ol, li, blockquote, p, hr components)
           h1: ({ children, ...props }) => (
             <h1 className="text-4xl font-bold mb-6 mt-8 scroll-mt-20 border-b border-gray-200 dark:border-gray-700 pb-4" {...props}>
               {children}
