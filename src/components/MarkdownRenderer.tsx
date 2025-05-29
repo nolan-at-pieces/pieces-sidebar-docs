@@ -115,21 +115,14 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             return <div {...props}>{children}</div>;
           },
 
-          // Enhanced image handling
+          // Enhanced image handling - ALWAYS use ExpandableImage
           img: ({ src, alt, ...props }: any) => {
-            const isExpandable = props['data-expandable'];
             const caption = props['data-caption'];
             
-            console.log('🔍 DEBUGGING: img component called with:', { src, alt, isExpandable, caption, props });
+            console.log('🔍 DEBUGGING: img component called with:', { src, alt, caption, props });
+            console.log('🎯 SUCCESS: Rendering image with ExpandableImage component');
             
-            if (isExpandable) {
-              console.log('🎯 SUCCESS: Rendering ExpandableImage component');
-              return <ExpandableImage src={src} alt={alt} caption={caption} />;
-            }
-            
-            // For regular markdown images, render with ExpandableImage but without special expandable behavior
-            console.log('🎯 SUCCESS: Rendering regular image as ExpandableImage');
-            return <ExpandableImage src={src} alt={alt} />;
+            return <ExpandableImage src={src} alt={alt} caption={caption} />;
           },
 
           // Custom link component to use React Router for internal links
