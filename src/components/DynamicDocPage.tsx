@@ -21,7 +21,11 @@ export function DynamicDocPage() {
       setError(null);
       
       try {
-        const contentPage = await loadMarkdownContent(`/${path}`);
+        // Construct the full docs path since the content index uses /docs/ prefixes
+        const fullPath = `/docs/${path}`;
+        console.log('Attempting to load content for path:', fullPath);
+        
+        const contentPage = await loadMarkdownContent(fullPath);
         if (contentPage) {
           setContent(contentPage);
         } else {
