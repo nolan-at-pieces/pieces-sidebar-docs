@@ -16,7 +16,7 @@ Welcome to our documentation! Follow these steps to get started.
 <Step number="1" title="Install the Application">
 Download and install from our website.
 
-![Installation Screenshot](https://example.com/install.png)
+![Installation Screenshot](https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/fundamentals/ltm-2-header.png)
 </Step>
 
 <Step number="2" title="Configure Settings">
@@ -41,10 +41,6 @@ Pieces powers developers to new levels of productivity by introducing the **[1] 
 Next, Pieces offers the **[2] Pieces Copilot**, assisting with day-to-day tasks like debugging code, generating comments, and answering questions—with as much or as little workflow context as you need.
 
 Finally, Pieces provides the **[3] Pieces Drive**, an intelligent and enriched material management experience that ensures your most important code—and other useful materials—are always at hand.
-
-:::info
-Ok I pull up
-:::
   
   ## LTM-2
 

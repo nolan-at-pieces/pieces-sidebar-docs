@@ -19,6 +19,20 @@ export function ExpandableImage({ src, alt, caption, className, ...props }: Expa
     setImageError(false);
     setImageLoaded(false);
   }, [src, alt, caption]);
+  
+  // Handle stuck loading states
+  useEffect(() => {
+    if (!src) return;
+    
+    const timeout = setTimeout(() => {
+      if (!imageLoaded && !imageError) {
+        console.log('⏱️ Image loading timeout, forcing display:', src);
+        setImageLoaded(true);
+      }
+    }, 3000);
+    
+    return () => clearTimeout(timeout);
+  }, [src, imageLoaded, imageError]);
 
   console.log('🔍 ExpandableImage rendered with:', { src, alt, caption, className, props });
 
@@ -30,12 +44,14 @@ export function ExpandableImage({ src, alt, caption, className, ...props }: Expa
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     console.error('❌ Image failed to load:', src);
     console.error('Error details:', e);
+    console.error('Image element:', e.currentTarget);
     setImageError(true);
     setImageLoaded(false);
   };
 
-  const handleImageLoad = () => {
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     console.log('✅ Image loaded successfully:', src);
+    console.log('Image dimensions:', e.currentTarget.naturalWidth, 'x', e.currentTarget.naturalHeight);
     setImageLoaded(true);
     setImageError(false);
   };
@@ -65,7 +81,7 @@ export function ExpandableImage({ src, alt, caption, className, ...props }: Expa
           </div>
         ) : (
           <div className="relative">
-            {!imageLoaded && (
+            {!imageLoaded && !imageError && (
               <div className="rounded-lg bg-gray-100 animate-pulse h-48 flex items-center justify-center">
                 <div className="text-gray-500">Loading image...</div>
               </div>
@@ -74,12 +90,11 @@ export function ExpandableImage({ src, alt, caption, className, ...props }: Expa
               src={src}
               alt={alt || ''}
               className={`rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-200 max-w-full h-auto ${
-                imageLoaded ? 'block' : 'hidden'
+                imageLoaded ? 'block' : 'absolute opacity-0 pointer-events-none'
               }`}
               onClick={() => setIsModalOpen(true)}
               onError={handleImageError}
               onLoad={handleImageLoad}
-              loading="lazy"
               {...props}
             />
           </div>
