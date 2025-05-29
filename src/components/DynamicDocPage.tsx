@@ -26,14 +26,19 @@ export function DynamicDocPage() {
         console.log('Attempting to load content for path:', fullPath);
         
         const contentPage = await loadMarkdownContent(fullPath);
+        console.log('Loaded content page:', contentPage);
+        
         if (contentPage) {
+          console.log('Content loaded successfully:', contentPage.metadata.title);
+          console.log('Content preview:', contentPage.content.substring(0, 200));
           setContent(contentPage);
         } else {
+          console.log('No content found for path:', fullPath);
           setError('Content not found');
         }
       } catch (err) {
-        setError('Failed to load content');
         console.error('Error loading content:', err);
+        setError('Failed to load content');
       } finally {
         setLoading(false);
       }
@@ -71,7 +76,7 @@ export function DynamicDocPage() {
   }
 
   return (
-    <div>
+    <div className="max-w-4xl mx-auto">
       {/* Page header */}
       <div className="mb-8 pb-6 border-b border-border">
         <h1 className="text-4xl font-bold mb-2">{content.metadata.title}</h1>
@@ -96,8 +101,10 @@ export function DynamicDocPage() {
         </div>
       </div>
 
-      {/* Content */}
-      <MarkdownRenderer content={content.content} />
+      {/* Content - Make sure this is properly rendered */}
+      <div className="markdown-content">
+        <MarkdownRenderer content={content.content} />
+      </div>
     </div>
   );
 }
