@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -26,7 +27,6 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
   // Parse custom callout syntax and normalize component names
   const processCustomSyntax = (raw: string) => {
     console.log('🔍 DEBUGGING: Original content length:', raw.length);
-    console.log('🔍 DEBUGGING: Original content preview:', raw.substring(0, 500));
     let str = raw;
 
     // Transform callout syntax: :::type[Title] or :::type{title="Title"}
@@ -34,8 +34,8 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
       /:::(\w+)(?:\[([^\]]*)\]|\{title="([^"]*)"\})?\n([\s\S]*?):::/g,
       (_match, type, t1, t2, inner) => {
         const title = t1 || t2 || '';
-        console.log(`🔍 DEBUGGING: Found callout: type=${type}, title=${title}`);
-        return `<Callout type=\"${type}\"${title ? ` title=\"${title}\"` : ''}>\n\n${inner.trim()}\n\n</Callout>`;
+        console.log(`🔍 Found callout: type=${type}, title=${title}`);
+        return `<Callout type="${type}"${title ? ` title="${title}"` : ''}>\n\n${inner.trim()}\n\n</Callout>`;
       }
     );
 
@@ -43,8 +43,8 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
     str = str.replace(
       /:::(\w+)\n([\s\S]*?):::/g,
       (_match, type, inner) => {
-        console.log(`🔍 DEBUGGING: Found simple callout: type=${type}`);
-        return `<Callout type=\"${type}\">\n\n${inner.trim()}\n\n</Callout>`;
+        console.log(`🔍 Found simple callout: type=${type}`);
+        return `<Callout type="${type}">\n\n${inner.trim()}\n\n</Callout>`;
       }
     );
 
@@ -62,15 +62,11 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
     );
     str = str.replace(/<\/expandableimage>/gi, '</ExpandableImage>');
 
-    console.log('🔍 DEBUGGING: Processed content length:', str.length);
-    console.log('🔍 DEBUGGING: Processed content preview:', str.substring(0, 800));
-
+    console.log('🔍 Processed content preview:', str.substring(0, 800));
     return str;
   };
 
   const processedContent = processCustomSyntax(content);
-  console.log('🔍 DEBUGGING: Final content passed to ReactMarkdown:');
-  console.log(processedContent);
 
   return (
     <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:scroll-mt-20">
@@ -82,12 +78,11 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             rehypeRaw,
             {
               allowDangerousHtml: true,
-              passThrough: ['Callout', 'Steps', 'Step', 'ExpandableImage'],
             },
           ],
         ]}
         components={{
-          // Custom callout & steps via raw <Callout>, <Steps>, <Step>
+          // Custom callout & steps components
           Callout: ({ type, title, children, ...props }: any) => (
             <Callout type={type} title={title} {...props}>
               {children}
@@ -100,16 +95,20 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             </Step>
           ),
 
-          // Render every markdown img as ExpandableImage with blur backdrop
-          img: ({ src, alt, ...props }: any) => (
-            <ExpandableImage
-              src={src!}
-              alt={alt}
-              defaultWidth={800}
-              backdropBlur="lg"
-              {...props}
-            />
-          ),
+          // Render every markdown img as ExpandableImage
+          img: ({ src, alt, ...props }: any) => {
+            if (!src) return null;
+            return (
+              <ExpandableImage
+                src={src}
+                alt={alt}
+                defaultWidth={800}
+                backdropBlur="lg"
+                {...props}
+              />
+            );
+          },
+          
           // Also catch manual <ExpandableImage> tags in markdown
           ExpandableImage: ({ src, alt, caption, ...props }: any) => (
             <ExpandableImage
@@ -215,7 +214,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           ),
           p: ({ children, ...props }) => <p className="mb-4 leading-relaxed text-gray-700 dark:text-gray-300" {...props}>{children}</p>,
           hr: (props) => <hr className="my-8 border-gray-300 dark:border-gray-600" {...props} />,
-        } as any}
+        }}
       >
         {processedContent}
       </ReactMarkdown>
