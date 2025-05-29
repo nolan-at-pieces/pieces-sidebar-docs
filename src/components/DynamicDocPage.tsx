@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MarkdownRenderer } from './MarkdownRenderer';
@@ -6,6 +5,7 @@ import { loadMarkdownContent, ContentPage } from '@/lib/content';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { TableOfContents } from './markdown/TableOfContents';
 
 export function DynamicDocPage() {
   const { '*': path } = useParams();
@@ -79,35 +79,41 @@ export function DynamicDocPage() {
   console.log('Rendering DynamicDocPage with content:', content.metadata.title);
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Page header */}
-      <div className="mb-8 pb-6 border-b border-border">
-        <h1 className="text-4xl font-bold mb-2">{content.metadata.title}</h1>
-        {content.metadata.description && (
-          <p className="text-xl text-muted-foreground mb-4">{content.metadata.description}</p>
-        )}
-        
-        {/* Metadata */}
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          {content.metadata.author && (
-            <div className="flex items-center gap-1">
-              <User className="w-4 h-4" />
-              <span>{content.metadata.author}</span>
-            </div>
+    <div className="max-w-7xl mx-auto flex gap-8">
+      {/* Main content */}
+      <div className="flex-1 min-w-0">
+        {/* Page header */}
+        <div className="mb-8 pb-6 border-b border-border">
+          <h1 className="text-4xl font-bold mb-2">{content.metadata.title}</h1>
+          {content.metadata.description && (
+            <p className="text-xl text-muted-foreground mb-4">{content.metadata.description}</p>
           )}
-          {content.metadata.lastModified && (
-            <div className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
-              <span>Updated {new Date(content.metadata.lastModified).toLocaleDateString()}</span>
-            </div>
-          )}
+          
+          {/* Metadata */}
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            {content.metadata.author && (
+              <div className="flex items-center gap-1">
+                <User className="w-4 h-4" />
+                <span>{content.metadata.author}</span>
+              </div>
+            )}
+            {content.metadata.lastModified && (
+              <div className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                <span>Updated {new Date(content.metadata.lastModified).toLocaleDateString()}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="markdown-content">
+          <MarkdownRenderer content={content.content} />
         </div>
       </div>
 
-      {/* Content - Make sure this is properly rendered */}
-      <div className="markdown-content">
-        <MarkdownRenderer content={content.content} />
-      </div>
+      {/* Table of Contents */}
+      <TableOfContents content={content.content} />
     </div>
   );
 }
