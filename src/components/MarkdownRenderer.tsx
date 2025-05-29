@@ -15,7 +15,7 @@ interface MarkdownRendererProps {
 }
 
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
-  // Parse custom callout syntax
+  // Parse custom callout syntax and normalize component names
   const processCustomSyntax = (content: string) => {
     console.log('Processing custom syntax for content:', content.substring(0, 200));
     
@@ -35,24 +35,6 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
       (match, type, innerContent) => {
         console.log(`Found simple callout: type=${type}`);
         return `<Callout type="${type}">\n\n${innerContent.trim()}\n\n</Callout>`;
-      }
-    );
-
-    // Transform Steps syntax
-    content = content.replace(
-      /<Steps>([\s\S]*?)<\/Steps>/g,
-      (match, stepsContent) => {
-        console.log('Found Steps block');
-        return `<Steps>${stepsContent}</Steps>`;
-      }
-    );
-
-    // Transform Step syntax
-    content = content.replace(
-      /<Step number="(\d+)" title="([^"]*)">([\s\S]*?)<\/Step>/g,
-      (match, number, title, stepContent) => {
-        console.log(`Found Step: number=${number}, title=${title}`);
-        return `<Step number="${number}" title="${title}">${stepContent}</Step>`;
       }
     );
 
@@ -89,7 +71,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             <ExpandableImage src={src} alt={alt} {...props} />
           ),
 
-          // Custom components - these are the key additions that were missing proper handling
+          // Custom components - properly registered with ReactMarkdown
           Callout: ({ type, title, children, ...props }: any) => {
             console.log('Rendering Callout component:', { type, title });
             return <Callout type={type} title={title} {...props}>{children}</Callout>;
@@ -103,6 +85,11 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           Step: ({ number, title, children, ...props }: any) => {
             console.log('Rendering Step component:', { number, title });
             return <Step number={parseInt(number)} title={title} {...props}>{children}</Step>;
+          },
+
+          ExpandableImage: ({ src, alt, caption, ...props }: any) => {
+            console.log('Rendering ExpandableImage component:', { src, alt });
+            return <ExpandableImage src={src} alt={alt} caption={caption} {...props} />;
           },
 
           // Enhanced table styling using custom components
