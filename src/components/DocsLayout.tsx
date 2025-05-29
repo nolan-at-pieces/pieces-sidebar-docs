@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,7 @@ const navigation = [
   },
   {
     title: "Pieces | Quick Guides",
-    href: "/docs/quick-guides",
+    href: null,
     isSection: true,
     items: [
       { title: "Overview", href: "/docs/quick-guides/overview" },
@@ -41,7 +42,6 @@ const navigation = [
   {
     title: "Long-Term Memory Prompting Guide",
     href: "/docs/long-term-memory-guide",
-    isSection: true,
     items: [
       { title: "Use Cases and Example Prompts", href: "/docs/long-term-memory-guide/use-cases" },
       { title: "Use Cases for the Pieces Workstream Activity View", href: "/docs/long-term-memory-guide/workstream-activity" },
@@ -52,22 +52,21 @@ const navigation = [
     title: "Pieces | Suite",
     href: "/docs/suite",
     items: [
-      { title: "Desktop App", href: "/docs/suite/desktop-app", isExpandable: true },
+      { title: "Desktop App", href: "/docs/suite/desktop-app" },
       { title: "Download & Install", href: "/docs/suite/download-install" },
       { title: "Onboarding", href: "/docs/suite/onboarding" },
-      { title: "Pieces Copilot", href: "/docs/suite/copilot", isExpandable: true },
-      { title: "Pieces Drive", href: "/docs/suite/drive", isExpandable: true },
+      { title: "Pieces Copilot", href: "/docs/suite/copilot" },
+      { title: "Pieces Drive", href: "/docs/suite/drive" },
       { title: "Workstream Activity", href: "/docs/suite/workstream-activity" },
-      { title: "Navigation", href: "/docs/suite/navigation", isExpandable: true },
-      { title: "Settings", href: "/docs/suite/settings", isExpandable: true },
-      { title: "Actions & Keyboard Shortcuts", href: "/docs/suite/actions-shortcuts", isExpandable: true },
-      { title: "Troubleshooting", href: "/docs/suite/troubleshooting", isExpandable: true },
+      { title: "Navigation", href: "/docs/suite/navigation" },
+      { title: "Settings", href: "/docs/suite/settings" },
+      { title: "Actions & Keyboard Shortcuts", href: "/docs/suite/actions-shortcuts" },
+      { title: "Troubleshooting", href: "/docs/suite/troubleshooting" },
     ],
   },
   {
     title: "Core Dependencies",
     href: "/docs/core-dependencies",
-    isExpandable: true,
   },
   {
     title: "Pieces | MCP",
@@ -85,6 +84,7 @@ const navigation = [
 function DocsSidebar({ className }: { className?: string }) {
   const location = useLocation();
   const [openSections, setOpenSections] = useState<string[]>(["Pieces | Quick Guides", "Long-Term Memory Prompting Guide"]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const toggleSection = (sectionTitle: string) => {
     setOpenSections(prev => 
@@ -97,6 +97,18 @@ function DocsSidebar({ className }: { className?: string }) {
   const isActive = (href: string) => location.pathname === href;
   const isSectionOpen = (sectionTitle: string) => openSections.includes(sectionTitle);
 
+  // Filter navigation based on search term
+  const filteredNavigation = navigation.map(section => ({
+    ...section,
+    items: section.items?.filter(item => 
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      section.title.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  })).filter(section => 
+    section.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (section.items && section.items.length > 0)
+  );
+
   return (
     <div className={cn("pb-12 w-64 h-full", className)}>
       <div className="space-y-4 py-4 h-full">
@@ -105,7 +117,7 @@ function DocsSidebar({ className }: { className?: string }) {
             <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">P</span>
             </div>
-            <span className="text-xl font-bold">Pieces Docs</span>
+            <span className="text-xl font-bold">Pieces</span>
           </Link>
           
           <div className="mb-6">
@@ -114,13 +126,15 @@ function DocsSidebar({ className }: { className?: string }) {
               <input
                 type="text"
                 placeholder="Search docs..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 text-sm border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
           </div>
           
           <div className="space-y-2">
-            {navigation.map((section) => (
+            {filteredNavigation.map((section) => (
               <div key={section.title}>
                 {section.items ? (
                   <div>
@@ -131,12 +145,12 @@ function DocsSidebar({ className }: { className?: string }) {
                       >
                         <div className="flex items-center">
                           <CollapsibleTrigger asChild>
-                            <Button variant="ghost" className="flex-1 justify-start px-3 py-2 text-sm">
-                              <span className="text-blue-600">{section.title}</span>
+                            <Button variant="ghost" className="flex-1 justify-start px-3 py-2 text-sm font-semibold">
+                              <span className="text-blue-600 break-words whitespace-normal leading-tight">{section.title}</span>
                               {isSectionOpen(section.title) ? (
-                                <ChevronDown className="ml-auto h-4 w-4" />
+                                <ChevronDown className="ml-auto h-4 w-4 flex-shrink-0" />
                               ) : (
-                                <ChevronRight className="ml-auto h-4 w-4" />
+                                <ChevronRight className="ml-auto h-4 w-4 flex-shrink-0" />
                               )}
                             </Button>
                           </CollapsibleTrigger>
@@ -147,7 +161,7 @@ function DocsSidebar({ className }: { className?: string }) {
                               key={item.href}
                               to={item.href}
                               className={cn(
-                                "block px-3 py-2 text-sm rounded-lg transition-colors",
+                                "block px-3 py-2 text-sm rounded-lg transition-colors break-words whitespace-normal leading-tight",
                                 isActive(item.href)
                                   ? "bg-primary/10 text-primary"
                                   : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
@@ -167,16 +181,16 @@ function DocsSidebar({ className }: { className?: string }) {
                           <Link
                             to={section.href}
                             className={cn(
-                              "flex-1 flex items-center px-3 py-2 text-sm rounded-lg transition-colors",
+                              "flex-1 flex items-center px-3 py-2 text-sm rounded-lg transition-colors break-words whitespace-normal leading-tight",
                               isActive(section.href)
                                 ? "bg-primary/10 text-primary"
                                 : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                             )}
                           >
-                            <span>{section.title}</span>
+                            <span className="break-words whitespace-normal leading-tight">{section.title}</span>
                           </Link>
                           <CollapsibleTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-auto p-1">
+                            <Button variant="ghost" size="sm" className="h-auto p-1 flex-shrink-0">
                               {isSectionOpen(section.title) ? (
                                 <ChevronDown className="h-4 w-4" />
                               ) : (
@@ -191,7 +205,7 @@ function DocsSidebar({ className }: { className?: string }) {
                               key={item.href}
                               to={item.href}
                               className={cn(
-                                "block px-3 py-2 text-sm rounded-lg transition-colors",
+                                "block px-3 py-2 text-sm rounded-lg transition-colors break-words whitespace-normal leading-tight",
                                 isActive(item.href)
                                   ? "bg-primary/10 text-primary"
                                   : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
@@ -208,13 +222,13 @@ function DocsSidebar({ className }: { className?: string }) {
                   <Link
                     to={section.href}
                     className={cn(
-                      "flex items-center px-3 py-2 text-sm rounded-lg transition-colors",
+                      "flex items-center px-3 py-2 text-sm rounded-lg transition-colors break-words whitespace-normal leading-tight",
                       isActive(section.href)
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                     )}
                   >
-                    <span>{section.title}</span>
+                    <span className="break-words whitespace-normal leading-tight">{section.title}</span>
                   </Link>
                 )}
               </div>

@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 import MeetPieces from "./pages/docs/MeetPieces";
 import Troubleshooting from "./pages/docs/Troubleshooting";
 import QuickGuides from "./pages/docs/QuickGuides";
+import LongTermMemoryGuide from "./pages/docs/LongTermMemoryGuide";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
               <Route path="meet-pieces" element={<MeetPieces />} />
               <Route path="troubleshooting" element={<Troubleshooting />} />
               <Route path="quick-guides" element={<QuickGuides />} />
+              <Route path="long-term-memory-guide" element={<LongTermMemoryGuide />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
