@@ -16,7 +16,11 @@ Next, Pieces offers the **[2] Pieces Copilot**, assisting with day-to-day tasks 
 
 Finally, Pieces provides the **[3] Pieces Drive**, an intelligent and enriched material management experience that ensures your most important code—and other useful materials—are always at hand.
 
-## LTM-2
+:::info
+Ok I pull up
+:::
+  
+  ## LTM-2
 
 The Long-Term Memory Engine (LTM-2) captures live context from your workflow over a 7-day period, enhancing your ability to recall and access past materials.
 
