@@ -5,14 +5,42 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import 'highlight.js/styles/github-dark.css';
 import { Link } from 'react-router-dom';
+import { ExpandableImage } from './markdown/ExpandableImage';
+import { Callout } from './markdown/Callout';
+import { Steps, Step } from './markdown/Steps';
+import { CustomTable, CustomTableHeader, CustomTableBody, CustomTableRow, CustomTableHead, CustomTableCell } from './markdown/CustomTable';
 
 interface MarkdownRendererProps {
   content: string;
 }
 
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
+  // Parse custom callout syntax
+  const processCustomSyntax = (content: string) => {
+    // Transform callout syntax: :::info[Title] or :::warning{title="Warning"}
+    content = content.replace(
+      /:::(\w+)(?:\[([^\]]*)\]|\{title="([^"]*)"\})?\n([\s\S]*?):::/g,
+      (match, type, title1, title2, innerContent) => {
+        const title = title1 || title2 || '';
+        return `<Callout type="${type}" title="${title}">\n\n${innerContent.trim()}\n\n</Callout>`;
+      }
+    );
+
+    // Transform simple callout syntax: :::info
+    content = content.replace(
+      /:::(\w+)\n([\s\S]*?):::/g,
+      (match, type, innerContent) => {
+        return `<Callout type="${type}">\n\n${innerContent.trim()}\n\n</Callout>`;
+      }
+    );
+
+    return content;
+  };
+
+  const processedContent = processCustomSyntax(content);
+
   return (
-    <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:scroll-mt-20 prose-pre:bg-gray-100 dark:prose-pre:bg-gray-800 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:before:content-none prose-code:after:content-none">
+    <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:scroll-mt-20">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight, rehypeRaw]}
@@ -32,16 +60,45 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
               </a>
             );
           },
-          // Enhanced image handling
+
+          // Enhanced image handling with expandable modal
           img: ({ src, alt, ...props }) => (
-            <img 
-              src={src} 
-              alt={alt} 
-              className="rounded-lg shadow-md my-6 max-w-full h-auto"
-              loading="lazy"
-              {...props}
-            />
+            <ExpandableImage src={src} alt={alt} {...props} />
           ),
+
+          // Custom components
+          Callout: ({ type, title, children }: any) => (
+            <Callout type={type} title={title}>{children}</Callout>
+          ),
+
+          Steps: ({ children }: any) => (
+            <Steps>{children}</Steps>
+          ),
+
+          Step: ({ number, title, children }: any) => (
+            <Step number={number} title={title}>{children}</Step>
+          ),
+
+          // Enhanced table styling using custom components
+          table: ({ children, ...props }) => (
+            <CustomTable {...props}>{children}</CustomTable>
+          ),
+          thead: ({ children, ...props }) => (
+            <CustomTableHeader {...props}>{children}</CustomTableHeader>
+          ),
+          tbody: ({ children, ...props }) => (
+            <CustomTableBody {...props}>{children}</CustomTableBody>
+          ),
+          tr: ({ children, ...props }) => (
+            <CustomTableRow {...props}>{children}</CustomTableRow>
+          ),
+          th: ({ children, ...props }) => (
+            <CustomTableHead {...props}>{children}</CustomTableHead>
+          ),
+          td: ({ children, ...props }) => (
+            <CustomTableCell {...props}>{children}</CustomTableCell>
+          ),
+
           // Custom heading components with better spacing
           h1: ({ children, ...props }) => (
             <h1 className="text-4xl font-bold mb-6 mt-8 scroll-mt-20 border-b border-gray-200 dark:border-gray-700 pb-4" {...props}>
@@ -63,6 +120,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
               {children}
             </h4>
           ),
+
           // Enhanced code block styling
           pre: ({ children, ...props }) => (
             <pre className="bg-gray-900 dark:bg-gray-950 text-gray-100 p-6 rounded-lg overflow-x-auto my-6 border" {...props}>
@@ -80,6 +138,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             }
             return <code className={className} {...props}>{children}</code>;
           },
+
           // Enhanced list styling
           ul: ({ children, ...props }) => (
             <ul className="space-y-2 my-4" {...props}>
@@ -96,43 +155,28 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
               {children}
             </li>
           ),
+
           // Enhanced blockquote styling
           blockquote: ({ children, ...props }) => (
             <blockquote className="border-l-4 border-blue-500 pl-6 my-6 italic text-gray-700 dark:text-gray-300 bg-blue-50 dark:bg-blue-950/20 py-4 rounded-r-lg" {...props}>
               {children}
             </blockquote>
           ),
-          // Enhanced table styling
-          table: ({ children, ...props }) => (
-            <div className="overflow-x-auto my-6">
-              <table className="min-w-full border border-gray-200 dark:border-gray-700 rounded-lg" {...props}>
-                {children}
-              </table>
-            </div>
-          ),
-          th: ({ children, ...props }) => (
-            <th className="bg-gray-50 dark:bg-gray-800 px-4 py-3 text-left font-semibold border-b border-gray-200 dark:border-gray-700" {...props}>
-              {children}
-            </th>
-          ),
-          td: ({ children, ...props }) => (
-            <td className="px-4 py-3 border-b border-gray-200 dark:border-gray-700" {...props}>
-              {children}
-            </td>
-          ),
+
           // Enhanced paragraph styling
           p: ({ children, ...props }) => (
             <p className="mb-4 leading-relaxed text-gray-700 dark:text-gray-300" {...props}>
               {children}
             </p>
           ),
+
           // Horizontal rule styling
           hr: ({ ...props }) => (
             <hr className="my-8 border-gray-300 dark:border-gray-600" {...props} />
           ),
         }}
       >
-        {content}
+        {processedContent}
       </ReactMarkdown>
     </div>
   );
