@@ -121,14 +121,10 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             return <div {...props}>{children}</div>;
           },
 
-          // Enhanced image handling - ALWAYS use ExpandableImage
           img: ({ src, alt, ...props }: any) => {
-            const caption = props['data-caption'];
-            
-            console.log('🔍 DEBUGGING: img component called with:', { src, alt, caption, props });
-            console.log('🎯 SUCCESS: Rendering image with ExpandableImage component');
-            
-            return <ExpandableImageComponent src={src} alt={alt} caption={caption} />;
+            const caption = props['data-caption'] || '';
+            console.log('🎯 Rendering ALL <img> tags with ExpandableImageComponent', { src, alt, caption });
+            return <ExpandableImageComponent src={src || ''} alt={alt || ''} caption={caption} {...props} />;
           },
 
           // Custom link component to use React Router for internal links
