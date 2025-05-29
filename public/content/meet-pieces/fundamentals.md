@@ -54,8 +54,6 @@ The Long-Term Memory Engine (LTM-2) captures live context from your workflow ove
 
 _Pieces Copilot with LTM-2 Context_
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1734028488469/d128a760-7e91-4dbf-8cfc-e7fc257488b7.png?auto=compress,format&format=webp&q=75)
-
 ---
 
 You can ask questions like, “_Can you provide me with the link to the Firestore database I was working in last week?”_ or “_Summarize the contents of the brief on plugin updates in the Google doc Tim shared”_ for game-changing productivity enhancement.
@@ -80,6 +78,8 @@ _Workstream Activity in the Pieces Desktop App_
 
 ---
 
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1734014941536/9c298363-d6b4-4e4a-9965-72db0fa59bc6.png?auto=compress,format&format=webp&q=75)
+  
 [PiecesOS](https://docs.pieces.app/products/core-dependencies/pieces-os) collects the LTM data and provides a concise roll-up of that data _every 20 minutes,_ drastically reducing the repetitive context-setting typical of many AI tools.
 
 Each roll-up is a snapshot that includes details on main tasks, projects, issues resolved, key decisions, discussions, documents, and code you’ve reviewed—often with helpful links included\!
@@ -93,8 +93,6 @@ Pieces Copilot leverages advanced Large Language Models (LLMs) to assist you in 
 ---
 
 _Pieces Copilot for Code Generation_
-
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1734028533289/f37f7075-f2d2-4a99-b948-c23fd70e7257.png?auto=compress,format&format=webp&q=75)
 
 ---
 
@@ -111,8 +109,6 @@ Saving and managing code and other materials is effortless and efficient with Pi
 ---
 
 _Viewing Saved Materials with Pieces Drive_
-
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1734026181487/e947ec50-4346-49f1-a967-62b218aafc47.png?auto=compress,format&format=webp&q=75)
 
 ---
 
