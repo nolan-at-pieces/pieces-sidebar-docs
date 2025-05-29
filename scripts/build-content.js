@@ -90,14 +90,6 @@ function buildContentIndex() {
   }
   
   console.log('Scanning content directory...');
-  console.log(`Content directory path: ${contentDir}`);
-  
-  // Check if content directory exists and list its contents
-  if (fs.existsSync(contentDir)) {
-    const rootItems = fs.readdirSync(contentDir);
-    console.log(`Found ${rootItems.length} items in content directory:`, rootItems);
-  }
-  
   processDirectory(contentDir);
   
   // Write the content index
@@ -137,13 +129,6 @@ function buildContentIndex() {
   }
   
   console.log('\n✅ Content index ready!\n');
-  
-  // Show summary of what was found
-  console.log('\n📊 Summary:');
-  console.log(`Total pages indexed: ${Object.keys(contentIndex).length}`);
-  console.log(`Navigation paths defined: ${navigationPaths.length}`);
-  console.log(`Missing content files: ${missingContent.length}`);
-  console.log(`Extra content files: ${extraContent.length}`);
 }
 
 function extractNavigationPaths() {
