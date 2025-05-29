@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
 import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
 import 'highlight.js/styles/github-dark.css';
 import { Link } from 'react-router-dom';
 
@@ -23,35 +23,54 @@ interface MarkdownRendererProps {
 }
 
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
-  const processCustomSyntax = (raw: string): string => {
+  // Parse custom callout syntax and normalize component names
+  const processCustomSyntax = (raw: string) => {
+    console.log('🔍 DEBUGGING: Original content length:', raw.length);
+    console.log('🔍 DEBUGGING: Original content preview:', raw.substring(0, 500));
     let str = raw;
 
-    // :::info[Title] → <Callout>…
+    // Transform callout syntax: :::type[Title] or :::type{title="Title"}
     str = str.replace(
-      /:::(\w+)(?:\[([^\]]*)\])?\n([\s\S]*?):::/g,
-      (_m, type, title, body) => {
-        const titleAttr = title ? ` title="${title}"` : '';
-        return `<Callout type="${type}"${titleAttr}>\n\n${body.trim()}\n\n</Callout>`;
+      /:::(\w+)(?:\[([^\]]*)\]|\{title="([^"]*)"\})?\n([\s\S]*?):::/g,
+      (_match, type, t1, t2, inner) => {
+        const title = t1 || t2 || '';
+        console.log(`🔍 DEBUGGING: Found callout: type=${type}, title=${title}`);
+        return `<Callout type=\"${type}\"${title ? ` title=\"${title}\"` : ''}>\n\n${inner.trim()}\n\n</Callout>`;
       }
     );
 
-    // Steps & Step tags → uppercase
+    // Transform simple callout syntax: :::type\n...:::
+    str = str.replace(
+      /:::(\w+)\n([\s\S]*?):::/g,
+      (_match, type, inner) => {
+        console.log(`🔍 DEBUGGING: Found simple callout: type=${type}`);
+        return `<Callout type=\"${type}\">\n\n${inner.trim()}\n\n</Callout>`;
+      }
+    );
+
+    // Steps -> <Steps>
     str = str.replace(/<steps>/gi, '<Steps>');
     str = str.replace(/<\/steps>/gi, '</Steps>');
-    str = str.replace(/<step(\s+)/gi, '<Step$1');
+    // Step -> <Step>
+    str = str.replace(/<step\s/gi, '<Step ');
     str = str.replace(/<\/step>/gi, '</Step>');
 
-    // ExpandableImage short syntax → proper tag
-    // (if you ever use a `<ExpandableImage src="" alt="" caption=""/>` shorthand)
+    // ExpandableImage shorthand -> full tag
     str = str.replace(
-      /<ExpandableImage\s+src="([^"]+)"\s*\/>/gi,
-      (_m, src) => `<ExpandableImage src="${src}" />`
+      /<expandableimage\s/gi,
+      '<ExpandableImage '
     );
+    str = str.replace(/<\/expandableimage>/gi, '</ExpandableImage>');
+
+    console.log('🔍 DEBUGGING: Processed content length:', str.length);
+    console.log('🔍 DEBUGGING: Processed content preview:', str.substring(0, 800));
 
     return str;
   };
 
-  const md = processCustomSyntax(content);
+  const processedContent = processCustomSyntax(content);
+  console.log('🔍 DEBUGGING: Final content passed to ReactMarkdown:');
+  console.log(processedContent);
 
   return (
     <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:scroll-mt-20">
@@ -68,104 +87,137 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           ],
         ]}
         components={{
-          // **Always** render images with ExpandableImage
-          img: ({ src, alt, ...props }) => (
+          // Custom callout & steps via raw <Callout>, <Steps>, <Step>
+          Callout: ({ type, title, children, ...props }: any) => (
+            <Callout type={type} title={title} {...props}>
+              {children}
+            </Callout>
+          ),
+          Steps: ({ children, ...props }: any) => <Steps {...props}>{children}</Steps>,
+          Step: ({ number, title, children, ...props }: any) => (
+            <Step number={parseInt(number, 10)} title={title} {...props}>
+              {children}
+            </Step>
+          ),
+
+          // Render every markdown img as ExpandableImage with blur backdrop
+          img: ({ src, alt, ...props }: any) => (
             <ExpandableImage
               src={src!}
               alt={alt}
-              // pick a reasonable max width for the expanded image
-              // your ExpandableImage implementation should read this prop
               defaultWidth={800}
-              // tell it to blur the backdrop when open
+              backdropBlur="lg"
+              {...props}
+            />
+          ),
+          // Also catch manual <ExpandableImage> tags in markdown
+          ExpandableImage: ({ src, alt, caption, ...props }: any) => (
+            <ExpandableImage
+              src={src}
+              alt={alt}
+              caption={caption}
+              defaultWidth={800}
               backdropBlur="lg"
               {...props}
             />
           ),
 
-          // Callouts, Steps, and Step
-          Callout: ({ type, title, children, ...p }: any) => (
-            <Callout type={type} title={title} {...p}>
-              {children}
-            </Callout>
-          ),
-          Steps: ({ children, ...p }: any) => <Steps {...p}>{children}</Steps>,
-          Step: ({ number, title, children, ...p }: any) => (
-            <Step number={parseInt(number, 10)} title={title} {...p}>
-              {children}
-            </Step>
-          ),
-
-          // Links via React Router
-          a: ({ href, children, ...p }) =>
-            href && href.startsWith('/') ? (
-              <Link to={href} {...p} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+          // React Router links for internal, external otherwise
+          a: ({ href, children, ...props }) =>
+            href?.startsWith('/') ? (
+              <Link
+                to={href}
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                {...props}
+              >
                 {children}
               </Link>
             ) : (
-              <a href={href} target="_blank" rel="noopener noreferrer" {...p} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                {...props}
+              >
                 {children}
               </a>
             ),
 
-          // Tables
-          table: ({ children, ...p }) => <CustomTable {...p}>{children}</CustomTable>,
-          thead: ({ children, ...p }) => <CustomTableHeader {...p}>{children}</CustomTableHeader>,
-          tbody: ({ children, ...p }) => <CustomTableBody {...p}>{children}</CustomTableBody>,
-          tr: ({ children, ...p }) => <CustomTableRow {...p}>{children}</CustomTableRow>,
-          th: ({ children, ...p }) => <CustomTableHead {...p}>{children}</CustomTableHead>,
-          td: ({ children, ...p }) => <CustomTableCell {...p}>{children}</CustomTableCell>,
+          // Table customization
+          table: ({ children, ...props }) => <CustomTable {...props}>{children}</CustomTable>,
+          thead: ({ children, ...props }) => <CustomTableHeader {...props}>{children}</CustomTableHeader>,
+          tbody: ({ children, ...props }) => <CustomTableBody {...props}>{children}</CustomTableBody>,
+          tr: ({ children, ...props }) => <CustomTableRow {...props}>{children}</CustomTableRow>,
+          th: ({ children, ...props }) => <CustomTableHead {...props}>{children}</CustomTableHead>,
+          td: ({ children, ...props }) => <CustomTableCell {...props}>{children}</CustomTableCell>,
 
           // Headings, code blocks, lists, etc.
-          h1: ({ children, ...p }) => (
-            <h1 className="text-4xl font-bold mb-6 mt-8 scroll-mt-20 border-b border-gray-200 dark:border-gray-700 pb-4" {...p}>
+          h1: ({ children, ...props }) => (
+            <h1
+              className="text-4xl font-bold mb-6 mt-8 scroll-mt-20 border-b border-gray-200 dark:border-gray-700 pb-4"
+              {...props}
+            >
               {children}
             </h1>
           ),
-          h2: ({ children, ...p }) => (
-            <h2 className="text-3xl font-semibold mb-4 mt-8 scroll-mt-20 border-b border-gray-200 dark:border-gray-700 pb-2" {...p}>
+          h2: ({ children, ...props }) => (
+            <h2
+              className="text-3xl font-semibold mb-4 mt-8 scroll-mt-20 border-b border-gray-200 dark:border-gray-700 pb-2"
+              {...props}
+            >
               {children}
             </h2>
           ),
-          h3: ({ children, ...p }) => (
-            <h3 className="text-2xl font-semibold mb-3 mt-6 scroll-mt-20" {...p}>
+          h3: ({ children, ...props }) => (
+            <h3 className="text-2xl font-semibold mb-3 mt-6 scroll-mt-20" {...props}>
               {children}
             </h3>
           ),
-          h4: ({ children, ...p }) => (
-            <h4 className="text-xl font-semibold mb-2 mt-4 scroll-mt-20" {...p}>
+          h4: ({ children, ...props }) => (
+            <h4 className="text-xl font-semibold mb-2 mt-4 scroll-mt-20" {...props}>
               {children}
             </h4>
           ),
-          pre: ({ children, ...p }) => (
-            <pre className="bg-gray-900 dark:bg-gray-950 text-gray-100 p-6 rounded-lg overflow-x-auto my-6 border" {...p}>
+          pre: ({ children, ...props }) => (
+            <pre
+              className="bg-gray-900 dark:bg-gray-950 text-gray-100 p-6 rounded-lg overflow-x-auto my-6 border"
+              {...props}
+            >
               {children}
             </pre>
           ),
-          code: ({ children, className, ...p }) => {
-            const inline = !className;
-            return inline ? (
-              <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm font-mono text-gray-800 dark:text-gray-200" {...p}>
+          code: ({ children, className, ...props }) => {
+            const isInline = !className;
+            return isInline ? (
+              <code
+                className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm font-mono text-gray-800 dark:text-gray-200"
+                {...props}
+              >
                 {children}
               </code>
             ) : (
-              <code className={className} {...p}>
+              <code className={className} {...props}>
                 {children}
               </code>
             );
           },
-          ul: ({ children, ...p }) => <ul className="space-y-2 my-4" {...p}>{children}</ul>,
-          ol: ({ children, ...p }) => <ol className="space-y-2 my-4" {...p}>{children}</ol>,
-          li: ({ children, ...p }) => <li className="leading-relaxed" {...p}>{children}</li>,
-          blockquote: ({ children, ...p }) => (
-            <blockquote className="border-l-4 border-blue-500 pl-6 my-6 italic text-gray-700 dark:text-gray-300 bg-blue-50 dark:bg-blue-950/20 py-4 rounded-r-lg" {...p}>
+          ul: ({ children, ...props }) => <ul className="space-y-2 my-4" {...props}>{children}</ul>,
+          ol: ({ children, ...props }) => <ol className="space-y-2 my-4" {...props}>{children}</ol>,
+          li: ({ children, ...props }) => <li className="leading-relaxed" {...props}>{children}</li>,
+          blockquote: ({ children, ...props }) => (
+            <blockquote
+              className="border-l-4 border-blue-500 pl-6 my-6 italic text-gray-700 dark:text-gray-300 bg-blue-50 dark:bg-blue-950/20 py-4 rounded-r-lg"
+              {...props}
+            >
               {children}
             </blockquote>
           ),
-          p: ({ children, ...p }) => <p className="mb-4 leading-relaxed text-gray-700 dark:text-gray-300" {...p}>{children}</p>,
-          hr: (p) => <hr className="my-8 border-gray-300 dark:border-gray-600" {...p} />,
-        }}
+          p: ({ children, ...props }) => <p className="mb-4 leading-relaxed text-gray-700 dark:text-gray-300" {...props}>{children}</p>,
+          hr: (props) => <hr className="my-8 border-gray-300 dark:border-gray-600" {...props} />,
+        } as any}
       >
-        {md}
+        {processedContent}
       </ReactMarkdown>
     </div>
   );
