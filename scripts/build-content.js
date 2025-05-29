@@ -30,14 +30,23 @@ function buildContentIndex() {
           const content = fs.readFileSync(itemPath, 'utf8');
           const { data, content: markdown } = matter(content);
           
-          const slug = path.join(basePath, item.replace('.md', ''));
-          const normalizedSlug = '/' + slug.replace(/\\/g, '/');
+          // Create the slug based on the file path structure
+          let slug;
+          if (basePath) {
+            slug = path.join(basePath, item.replace('.md', ''));
+          } else {
+            slug = item.replace('.md', '');
+          }
+          
+          // Normalize the slug to use forward slashes and ensure it starts with /docs/
+          const normalizedSlug = '/docs/' + slug.replace(/\\/g, '/');
           
           contentIndex[normalizedSlug] = {
             slug: normalizedSlug,
             metadata: {
               title: data.title || 'Untitled',
               description: data.description,
+              sidebarTitle: data.sidebarTitle,
               author: data.author,
               lastModified: data.lastModified || stat.mtime.toISOString(),
               order: data.order
@@ -45,6 +54,8 @@ function buildContentIndex() {
             content: markdown,
             lastModified: stat.mtime.toISOString()
           };
+          
+          console.log(`Processed: ${normalizedSlug}`);
         } catch (error) {
           console.error(`Error processing ${itemPath}:`, error.message);
         }
@@ -54,8 +65,13 @@ function buildContentIndex() {
   
   processDirectory(contentDir);
   
+  // Write the content index
   fs.writeFileSync(outputFile, JSON.stringify(contentIndex, null, 2));
   console.log(`Built content index with ${Object.keys(contentIndex).length} pages`);
+  
+  // Log all created paths for debugging
+  console.log('Created paths:');
+  Object.keys(contentIndex).forEach(path => console.log(`  ${path}`));
 }
 
 if (require.main === module) {
