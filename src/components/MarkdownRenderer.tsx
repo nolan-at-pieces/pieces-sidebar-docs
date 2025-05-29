@@ -14,7 +14,7 @@ interface MarkdownRendererProps {
 }
 
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
-  // Parse custom callout syntax and normalize component names
+  // Parse custom callout syntax and convert to HTML
   const processCustomSyntax = (content: string) => {
     console.log('🔍 DEBUGGING: Original content length:', content.length);
     console.log('🔍 DEBUGGING: Original content preview:', content.substring(0, 500));
@@ -25,7 +25,8 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
       (match, type, title1, title2, innerContent) => {
         const title = title1 || title2 || '';
         console.log(`🔍 DEBUGGING: Found callout: type=${type}, title=${title}`);
-        const replacement = `<Callout type="${type}" title="${title}">\n\n${innerContent.trim()}\n\n</Callout>`;
+        // Convert to HTML that ReactMarkdown can process
+        const replacement = `<div data-callout="${type}" data-title="${title}">\n\n${innerContent.trim()}\n\n</div>`;
         console.log('🔍 DEBUGGING: Callout replacement:', replacement);
         return replacement;
       }
@@ -36,56 +37,38 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
       /:::(\w+)\n([\s\S]*?):::/g,
       (match, type, innerContent) => {
         console.log(`🔍 DEBUGGING: Found simple callout: type=${type}`);
-        const replacement = `<Callout type="${type}">\n\n${innerContent.trim()}\n\n</Callout>`;
+        const replacement = `<div data-callout="${type}">\n\n${innerContent.trim()}\n\n</div>`;
         console.log('🔍 DEBUGGING: Simple callout replacement:', replacement);
         return replacement;
       }
     );
 
-    // Transform Steps and Step components to uppercase
-    content = content.replace(/<steps>/gi, (match) => {
-      console.log('🔍 DEBUGGING: Replacing <steps> with <Steps>');
-      return '<Steps>';
+    // Transform Steps and Step components to HTML
+    content = content.replace(/<Steps>/gi, () => {
+      console.log('🔍 DEBUGGING: Replacing <Steps> with HTML div');
+      return '<div data-steps="true">';
     });
-    content = content.replace(/<\/steps>/gi, (match) => {
-      console.log('🔍 DEBUGGING: Replacing </steps> with </Steps>');
-      return '</Steps>';
+    content = content.replace(/<\/Steps>/gi, () => {
+      console.log('🔍 DEBUGGING: Replacing </Steps> with HTML div close');
+      return '</div>';
     });
-    content = content.replace(/<step\s/gi, (match) => {
-      console.log('🔍 DEBUGGING: Replacing <step with <Step');
-      return '<Step ';
+    content = content.replace(/<Step\s+number="(\d+)"(?:\s+title="([^"]*)")?>/gi, (match, number, title) => {
+      console.log('🔍 DEBUGGING: Replacing <Step> with HTML div');
+      return `<div data-step="${number}" data-step-title="${title || ''}">`;
     });
-    content = content.replace(/<\/step>/gi, (match) => {
-      console.log('🔍 DEBUGGING: Replacing </step> with </Step>');
-      return '</Step>';
+    content = content.replace(/<\/Step>/gi, () => {
+      console.log('🔍 DEBUGGING: Replacing </Step> with HTML div close');
+      return '</div>';
     });
 
-    // Transform ExpandableImage components
-    content = content.replace(/<expandableimage\s/gi, (match) => {
-      console.log('🔍 DEBUGGING: Replacing <expandableimage with <ExpandableImage');
-      return '<ExpandableImage ';
-    });
-    content = content.replace(/<\/expandableimage>/gi, (match) => {
-      console.log('🔍 DEBUGGING: Replacing </expandableimage> with </ExpandableImage>');
-      return '</ExpandableImage>';
+    // Transform ExpandableImage components to HTML
+    content = content.replace(/<ExpandableImage\s+src="([^"]*)"(?:\s+alt="([^"]*)")?(?:\s+caption="([^"]*)")?\/>/gi, (match, src, alt, caption) => {
+      console.log('🔍 DEBUGGING: Replacing <ExpandableImage> with HTML img');
+      return `<img data-expandable="true" src="${src}" alt="${alt || ''}" data-caption="${caption || ''}" />`;
     });
 
     console.log('🔍 DEBUGGING: Processed content length:', content.length);
     console.log('🔍 DEBUGGING: Processed content preview:', content.substring(0, 800));
-    console.log('🔍 DEBUGGING: Looking for custom tags in processed content...');
-    
-    // Check if custom tags are present
-    const hasCallout = content.includes('<Callout');
-    const hasSteps = content.includes('<Steps');
-    const hasStep = content.includes('<Step');
-    const hasExpandableImage = content.includes('<ExpandableImage');
-    
-    console.log('🔍 DEBUGGING: Custom tags found:', {
-      hasCallout,
-      hasSteps,
-      hasStep,
-      hasExpandableImage
-    });
 
     return content;
   };
@@ -100,19 +83,42 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[
-          rehypeHighlight,
-          [rehypeRaw, { 
-            passThrough: ['Callout', 'Steps', 'Step', 'ExpandableImage'],
-            allowDangerousHtml: true 
-          }]
+          [rehypeRaw, { allowDangerousHtml: true }],
+          rehypeHighlight
         ]}
         components={{
-          // Test component to verify the pipeline works
-          div: ({ children, ...props }) => {
-            if (props.className === 'test-custom') {
-              console.log('🔍 DEBUGGING: Test div component rendered!', props);
+          // Custom div handler for callouts
+          div: ({ children, 'data-callout': calloutType, 'data-title': title, 'data-steps': isSteps, 'data-step': stepNumber, 'data-step-title': stepTitle, ...props }) => {
+            console.log('🔍 DEBUGGING: div component called with:', { calloutType, title, isSteps, stepNumber, stepTitle, props });
+            
+            if (calloutType) {
+              console.log('🎯 SUCCESS: Rendering Callout component');
+              return <Callout type={calloutType as any} title={title} {...props}>{children}</Callout>;
             }
+            
+            if (isSteps) {
+              console.log('🎯 SUCCESS: Rendering Steps component');
+              return <Steps {...props}>{children}</Steps>;
+            }
+            
+            if (stepNumber) {
+              console.log('🎯 SUCCESS: Rendering Step component');
+              return <Step number={parseInt(stepNumber)} title={stepTitle} {...props}>{children}</Step>;
+            }
+            
             return <div {...props}>{children}</div>;
+          },
+
+          // Enhanced image handling
+          img: ({ src, alt, 'data-expandable': isExpandable, 'data-caption': caption, ...props }) => {
+            console.log('🔍 DEBUGGING: img component called with:', { src, alt, isExpandable, caption });
+            
+            if (isExpandable) {
+              console.log('🎯 SUCCESS: Rendering ExpandableImage component');
+              return <ExpandableImage src={src} alt={alt} caption={caption} {...props} />;
+            }
+            
+            return <ExpandableImage src={src} alt={alt} {...props} />;
           },
 
           // Custom link component to use React Router for internal links
@@ -129,53 +135,6 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
                 {children}
               </a>
             );
-          },
-
-          // Enhanced image handling with expandable modal
-          img: ({ src, alt, ...props }) => (
-            <ExpandableImage src={src} alt={alt} {...props} />
-          ),
-
-          // Custom components with extensive debugging
-          Callout: ({ type, title, children, ...props }: any) => {
-            console.log('🎯 SUCCESS: Callout component called with:', { 
-              type, 
-              title, 
-              children: typeof children, 
-              props,
-              childrenContent: children?.toString?.()?.substring(0, 100)
-            });
-            return <Callout type={type} title={title} {...props}>{children}</Callout>;
-          },
-
-          Steps: ({ children, ...props }: any) => {
-            console.log('🎯 SUCCESS: Steps component called with:', { 
-              children: typeof children, 
-              props,
-              childrenLength: Array.isArray(children) ? children.length : 'not array'
-            });
-            return <Steps {...props}>{children}</Steps>;
-          },
-
-          Step: ({ number, title, children, ...props }: any) => {
-            console.log('🎯 SUCCESS: Step component called with:', { 
-              number, 
-              title, 
-              children: typeof children, 
-              props,
-              parsedNumber: parseInt(number)
-            });
-            return <Step number={parseInt(number)} title={title} {...props}>{children}</Step>;
-          },
-
-          ExpandableImage: ({ src, alt, caption, ...props }: any) => {
-            console.log('🎯 SUCCESS: ExpandableImage component called with:', { 
-              src, 
-              alt, 
-              caption, 
-              props 
-            });
-            return <ExpandableImage src={src} alt={alt} caption={caption} {...props} />;
           },
 
           // Enhanced table styling using custom components
@@ -268,7 +227,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           hr: ({ ...props }) => (
             <hr className="my-8 border-gray-300 dark:border-gray-600" {...props} />
           ),
-        } as any}
+        }}
       >
         {processedContent}
       </ReactMarkdown>
