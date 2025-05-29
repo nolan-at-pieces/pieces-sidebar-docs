@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -32,6 +31,7 @@ const navigation = [
   {
     title: "Pieces | Quick Guides",
     href: "/docs/quick-guides",
+    isSection: true,
     items: [
       { title: "Overview", href: "/docs/quick-guides/overview" },
       { title: "Using Long-Term Memory Context", href: "/docs/quick-guides/long-term-memory" },
@@ -41,6 +41,7 @@ const navigation = [
   {
     title: "Long-Term Memory Prompting Guide",
     href: "/docs/long-term-memory-guide",
+    isSection: true,
     items: [
       { title: "Use Cases and Example Prompts", href: "/docs/long-term-memory-guide/use-cases" },
       { title: "Use Cases for the Pieces Workstream Activity View", href: "/docs/long-term-memory-guide/workstream-activity" },
@@ -83,7 +84,7 @@ const navigation = [
 
 function DocsSidebar({ className }: { className?: string }) {
   const location = useLocation();
-  const [openSections, setOpenSections] = useState<string[]>([]);
+  const [openSections, setOpenSections] = useState<string[]>(["Pieces | Quick Guides", "Long-Term Memory Prompting Guide"]);
 
   const toggleSection = (sectionTitle: string) => {
     setOpenSections(prev => 
@@ -122,74 +123,99 @@ function DocsSidebar({ className }: { className?: string }) {
             {navigation.map((section) => (
               <div key={section.title}>
                 {section.items ? (
-                  <Collapsible 
-                    open={isSectionOpen(section.title)} 
-                    onOpenChange={() => toggleSection(section.title)}
-                  >
-                    <div className="flex items-center">
-                      <Link
-                        to={section.href}
-                        className={cn(
-                          "flex-1 flex items-center px-3 py-2 text-sm rounded-lg transition-colors",
-                          isActive(section.href)
-                            ? "bg-primary/10 text-primary"
-                            : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                        )}
+                  <div>
+                    {section.isSection ? (
+                      <Collapsible 
+                        open={isSectionOpen(section.title)} 
+                        onOpenChange={() => toggleSection(section.title)}
                       >
-                        <span>{section.title}</span>
-                      </Link>
-                      <CollapsibleTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-auto p-1">
-                          {isSectionOpen(section.title) ? (
-                            <ChevronDown className="h-4 w-4" />
-                          ) : (
-                            <ChevronRight className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </CollapsibleTrigger>
-                    </div>
-                    <CollapsibleContent className="ml-4 mt-1 space-y-1">
-                      {section.items.map((item) => (
-                        <div key={item.href} className="flex items-center">
+                        <div className="flex items-center">
+                          <CollapsibleTrigger asChild>
+                            <Button variant="ghost" className="flex-1 justify-start px-3 py-2 text-sm">
+                              <span className="text-blue-600">{section.title}</span>
+                              {isSectionOpen(section.title) ? (
+                                <ChevronDown className="ml-auto h-4 w-4" />
+                              ) : (
+                                <ChevronRight className="ml-auto h-4 w-4" />
+                              )}
+                            </Button>
+                          </CollapsibleTrigger>
+                        </div>
+                        <CollapsibleContent className="ml-4 mt-1 space-y-1">
+                          {section.items.map((item) => (
+                            <Link
+                              key={item.href}
+                              to={item.href}
+                              className={cn(
+                                "block px-3 py-2 text-sm rounded-lg transition-colors",
+                                isActive(item.href)
+                                  ? "bg-primary/10 text-primary"
+                                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                              )}
+                            >
+                              {item.title}
+                            </Link>
+                          ))}
+                        </CollapsibleContent>
+                      </Collapsible>
+                    ) : (
+                      <Collapsible 
+                        open={isSectionOpen(section.title)} 
+                        onOpenChange={() => toggleSection(section.title)}
+                      >
+                        <div className="flex items-center">
                           <Link
-                            to={item.href}
+                            to={section.href}
                             className={cn(
-                              "flex-1 px-3 py-2 text-sm rounded-lg transition-colors",
-                              isActive(item.href)
+                              "flex-1 flex items-center px-3 py-2 text-sm rounded-lg transition-colors",
+                              isActive(section.href)
                                 ? "bg-primary/10 text-primary"
                                 : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                             )}
                           >
-                            {item.title}
+                            <span>{section.title}</span>
                           </Link>
-                          {item.isExpandable && (
+                          <CollapsibleTrigger asChild>
                             <Button variant="ghost" size="sm" className="h-auto p-1">
-                              <ChevronRight className="h-4 w-4" />
+                              {isSectionOpen(section.title) ? (
+                                <ChevronDown className="h-4 w-4" />
+                              ) : (
+                                <ChevronRight className="h-4 w-4" />
+                              )}
                             </Button>
-                          )}
+                          </CollapsibleTrigger>
                         </div>
-                      ))}
-                    </CollapsibleContent>
-                  </Collapsible>
-                ) : (
-                  <div className="flex items-center">
-                    <Link
-                      to={section.href}
-                      className={cn(
-                        "flex-1 flex items-center px-3 py-2 text-sm rounded-lg transition-colors",
-                        isActive(section.href)
-                          ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                      )}
-                    >
-                      <span>{section.title}</span>
-                    </Link>
-                    {section.isExpandable && (
-                      <Button variant="ghost" size="sm" className="h-auto p-1">
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
+                        <CollapsibleContent className="ml-4 mt-1 space-y-1">
+                          {section.items.map((item) => (
+                            <Link
+                              key={item.href}
+                              to={item.href}
+                              className={cn(
+                                "block px-3 py-2 text-sm rounded-lg transition-colors",
+                                isActive(item.href)
+                                  ? "bg-primary/10 text-primary"
+                                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                              )}
+                            >
+                              {item.title}
+                            </Link>
+                          ))}
+                        </CollapsibleContent>
+                      </Collapsible>
                     )}
                   </div>
+                ) : (
+                  <Link
+                    to={section.href}
+                    className={cn(
+                      "flex items-center px-3 py-2 text-sm rounded-lg transition-colors",
+                      isActive(section.href)
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                    )}
+                  >
+                    <span>{section.title}</span>
+                  </Link>
                 )}
               </div>
             ))}
