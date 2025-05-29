@@ -90,9 +90,9 @@ export function TableOfContents({ content }: TableOfContentsProps) {
                     ? 'text-foreground font-medium border-l-2 border-primary' 
                     : 'text-muted-foreground border-l-2 border-transparent'
                 } ${
-                  item.level === 1 ? 'pl-0' : 
-                  item.level === 2 ? 'pl-4' : 
-                  'pl-8'
+                  item.level === 1 ? 'pl-3' : 
+                  item.level === 2 ? 'pl-7' : 
+                  'pl-11'
                 } py-1.5`}
               >
                 {item.text}
