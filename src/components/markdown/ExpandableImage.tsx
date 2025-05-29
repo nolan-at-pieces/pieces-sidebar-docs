@@ -20,7 +20,7 @@ export function ExpandableImage({ src, alt, caption, className, ...props }: Expa
     setImageLoaded(false);
   }, [src, alt, caption]);
 
-  console.log('🔍 ExpandableImage rendered with:', { src, alt, caption, props });
+  console.log('🔍 ExpandableImage rendered with:', { src, alt, caption, className, props });
 
   if (!src) {
     console.log('❌ No src provided to ExpandableImage');

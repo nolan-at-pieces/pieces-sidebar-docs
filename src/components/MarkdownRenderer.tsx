@@ -63,70 +63,53 @@ interface CustomComponents extends Components {
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
   // Parse custom callout syntax and convert to HTML
   const processCustomSyntax = (content: string) => {
-    console.log('🔍 DEBUGGING: Original content length:', content.length);
-    console.log('🔍 DEBUGGING: Original content preview:', content.substring(0, 500));
     
     // Transform callout syntax: :::info[Title] or :::warning{title="Warning"}
     content = content.replace(
       /:::(\w+)(?:\[([^\]]*)\]|\{title="([^"]*)"\})?\n([\s\S]*?):::/g,
       (match, type, title1, title2, innerContent) => {
         const title = title1 || title2 || '';
-        console.log(`🔍 DEBUGGING: Found callout: type=${type}, title=${title}`);
         // Convert to HTML that ReactMarkdown can process
-        const replacement = `<div data-callout="${type}" data-title="${title}">\n\n${innerContent.trim()}\n\n</div>`;
-        console.log('🔍 DEBUGGING: Callout replacement:', replacement);
-        return replacement;
+        return `<div data-callout="${type}" data-title="${title}">\n\n${innerContent.trim()}\n\n</div>`;
       }
     );
 
     // Transform simple callout syntax: :::info
     content = content.replace(
       /:::(\w+)\n([\s\S]*?):::/g,
-      (match, type, innerContent) => {
-        console.log(`🔍 DEBUGGING: Found simple callout: type=${type}`);
-        const replacement = `<div data-callout="${type}">\n\n${innerContent.trim()}\n\n</div>`;
-        console.log('🔍 DEBUGGING: Simple callout replacement:', replacement);
-        return replacement;
+      (_, type, innerContent) => {
+        return `<div data-callout="${type}">\n\n${innerContent.trim()}\n\n</div>`;
       }
     );
 
     // Transform Steps and Step components to HTML
     content = content.replace(/<Steps>/gi, () => {
-      console.log('🔍 DEBUGGING: Replacing <Steps> with HTML div');
       return '<div data-steps="true">';
     });
     content = content.replace(/<\/Steps>/gi, () => {
-      console.log('🔍 DEBUGGING: Replacing </Steps> with HTML div close');
       return '</div>';
     });
-    content = content.replace(/<Step\s+number="(\d+)"(?:\s+title="([^"]*)")?>/gi, (match, number, title) => {
-      console.log('🔍 DEBUGGING: Replacing <Step> with HTML div');
+    content = content.replace(/<Step\s+number="(\d+)"(?:\s+title="([^"]*)")?>/gi, (_, number, title) => {
       return `<div data-step="${number}" data-step-title="${title || ''}">`;
     });
     content = content.replace(/<\/Step>/gi, () => {
-      console.log('🔍 DEBUGGING: Replacing </Step> with HTML div close');
       return '</div>';
     });
 
     // Transform ExpandableImage components to HTML
-    content = content.replace(/<ExpandableImage\s+src="([^"]*)"(?:\s+alt="([^"]*)")?(?:\s+caption="([^"]*)")?\/>/gi, (match, src, alt, caption) => {
-      console.log('🔍 DEBUGGING: Replacing <ExpandableImage> with HTML img', { src, alt, caption });
+    content = content.replace(/<ExpandableImage\s+src="([^"]*)"(?:\s+alt="([^"]*)")?(?:\s+caption="([^"]*)")?\/>/gi, (_, src, alt, caption) => {
       // Ensure caption is preserved in both data-caption and alt attributes
       const safeAlt = alt || '';
       const safeCaption = caption || '';
       return `<img src="${src}" alt="${safeAlt}" data-caption="${safeCaption}" />`;
     });
 
-    console.log('🔍 DEBUGGING: Processed content length:', content.length);
-    console.log('🔍 DEBUGGING: Processed content preview:', content.substring(0, 800));
 
     return content;
   };
 
   const processedContent = processCustomSyntax(content);
   
-  console.log('🔍 DEBUGGING: Final content being passed to ReactMarkdown:');
-  console.log(processedContent);
 
   return (
     <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:scroll-mt-20">
@@ -140,7 +123,6 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
         components={{
           // Explicit ExpandableImage component handler
           ExpandableImage: ({ src, alt, caption, ...props }: ImageProps) => {
-            console.log('🎯 SUCCESS: Rendering ExpandableImage component', { src, alt, caption });
             return <ExpandableImageComponent src={src} alt={alt} caption={(caption as string) || ''} {...props} />;
           },
 
@@ -152,20 +134,16 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             const stepNumber = props['data-step'];
             const stepTitle = props['data-step-title'];
             
-            console.log('🔍 DEBUGGING: div component called with:', { calloutType, title, isSteps, stepNumber, stepTitle, props });
             
             if (calloutType) {
-              console.log('🎯 SUCCESS: Rendering Callout component');
               return <Callout type={calloutType as 'info' | 'warning' | 'tip' | 'error' | 'success'} title={title} {...props}>{children}</Callout>;
             }
             
             if (isSteps) {
-              console.log('🎯 SUCCESS: Rendering Steps component');
               return <Steps {...props}>{children}</Steps>;
             }
             
             if (stepNumber) {
-              console.log('🎯 SUCCESS: Rendering Step component');
               return <Step number={parseInt(stepNumber)} title={stepTitle} {...props}>{children}</Step>;
             }
             
@@ -174,7 +152,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
 
           img: ({ src, alt, ...props }: ImageProps) => {
             const caption = (props['data-caption'] as string) || '';
-            console.log('🎯 Rendering ALL <img> tags with ExpandableImageComponent', { src, alt, caption });
+            console.log('🖼️ Image component:', { src, alt, caption });
             return <ExpandableImageComponent src={src || ''} alt={alt || ''} caption={caption} {...props} />;
           },
 
