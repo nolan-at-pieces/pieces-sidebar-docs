@@ -1,11 +1,10 @@
-
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import 'highlight.js/styles/github-dark.css';
 import { Link } from 'react-router-dom';
-import { ExpandableImage } from './markdown/ExpandableImage';
+import { ExpandableImage as ExpandableImageComponent } from './markdown/ExpandableImage';
 import { Callout } from './markdown/Callout';
 import { Steps, Step } from './markdown/Steps';
 import { CustomTable, CustomTableHeader, CustomTableBody, CustomTableRow, CustomTableHead, CustomTableCell } from './markdown/CustomTable';
@@ -88,10 +87,10 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           rehypeHighlight
         ]}
         components={{
-          // Explicit ExpandableImage component handler
+          // Explicit ExpandableImage component handler - FIXED: use aliased import
           ExpandableImage: ({ src, alt, caption, ...props }: any) => {
             console.log('🎯 SUCCESS: Rendering ExpandableImage component', { src, alt, caption });
-            return <ExpandableImage src={src} alt={alt} caption={caption} {...props} />;
+            return <ExpandableImageComponent src={src} alt={alt} caption={caption} {...props} />;
           },
 
           // Custom div handler for callouts
@@ -129,7 +128,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             console.log('🔍 DEBUGGING: img component called with:', { src, alt, caption, props });
             console.log('🎯 SUCCESS: Rendering image with ExpandableImage component');
             
-            return <ExpandableImage src={src} alt={alt} caption={caption} />;
+            return <ExpandableImageComponent src={src} alt={alt} caption={caption} />;
           },
 
           // Custom link component to use React Router for internal links
