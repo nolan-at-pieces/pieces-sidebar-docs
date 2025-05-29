@@ -38,6 +38,16 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
       }
     );
 
+    // Transform Steps and Step components to uppercase
+    content = content.replace(/<steps>/gi, '<Steps>');
+    content = content.replace(/<\/steps>/gi, '</Steps>');
+    content = content.replace(/<step\s/gi, '<Step ');
+    content = content.replace(/<\/step>/gi, '</Step>');
+
+    // Transform ExpandableImage components
+    content = content.replace(/<expandableimage\s/gi, '<ExpandableImage ');
+    content = content.replace(/<\/expandableimage>/gi, '</ExpandableImage>');
+
     console.log('Processed content:', content.substring(0, 300));
     return content;
   };
@@ -112,7 +122,6 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             <CustomTableCell {...props}>{children}</CustomTableCell>
           ),
 
-          // Custom heading components with better spacing
           h1: ({ children, ...props }) => (
             <h1 className="text-4xl font-bold mb-6 mt-8 scroll-mt-20 border-b border-gray-200 dark:border-gray-700 pb-4" {...props}>
               {children}
@@ -134,7 +143,6 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             </h4>
           ),
 
-          // Enhanced code block styling
           pre: ({ children, ...props }) => (
             <pre className="bg-gray-900 dark:bg-gray-950 text-gray-100 p-6 rounded-lg overflow-x-auto my-6 border" {...props}>
               {children}
@@ -152,7 +160,6 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             return <code className={className} {...props}>{children}</code>;
           },
 
-          // Enhanced list styling
           ul: ({ children, ...props }) => (
             <ul className="space-y-2 my-4" {...props}>
               {children}
@@ -169,21 +176,18 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             </li>
           ),
 
-          // Enhanced blockquote styling
           blockquote: ({ children, ...props }) => (
             <blockquote className="border-l-4 border-blue-500 pl-6 my-6 italic text-gray-700 dark:text-gray-300 bg-blue-50 dark:bg-blue-950/20 py-4 rounded-r-lg" {...props}>
               {children}
             </blockquote>
           ),
 
-          // Enhanced paragraph styling
           p: ({ children, ...props }) => (
             <p className="mb-4 leading-relaxed text-gray-700 dark:text-gray-300" {...props}>
               {children}
             </p>
           ),
 
-          // Horizontal rule styling
           hr: ({ ...props }) => (
             <hr className="my-8 border-gray-300 dark:border-gray-600" {...props} />
           ),
