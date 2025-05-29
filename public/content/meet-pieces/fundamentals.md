@@ -4,8 +4,6 @@ description: "Learn about the [3] core features of Pieces, available for use wit
 sidebarTitle: "Fundamentals"
 ---
 
----
-
 # Getting Started
 
 :::info[Welcome]
