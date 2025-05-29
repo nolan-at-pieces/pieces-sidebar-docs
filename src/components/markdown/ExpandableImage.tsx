@@ -15,11 +15,12 @@ export function ExpandableImage({ src, alt, caption, className, ...props }: Expa
 
   // Reset states when src changes
   useEffect(() => {
+    console.log('🔄 ExpandableImage mounted/updated:', { src, alt, caption });
     setImageError(false);
     setImageLoaded(false);
-  }, [src]);
+  }, [src, alt, caption]);
 
-  console.log('🔍 ExpandableImage rendered with:', { src, alt, caption });
+  console.log('🔍 ExpandableImage rendered with:', { src, alt, caption, props });
 
   if (!src) {
     console.log('❌ No src provided to ExpandableImage');
@@ -44,6 +45,9 @@ export function ExpandableImage({ src, alt, caption, className, ...props }: Expa
     setImageError(false);
     setImageLoaded(false);
   };
+
+  // Use caption from props if available, otherwise use alt text
+  const displayCaption = caption || alt || '';
 
   return (
     <>
@@ -80,16 +84,16 @@ export function ExpandableImage({ src, alt, caption, className, ...props }: Expa
             />
           </div>
         )}
-        {caption && (
+        {displayCaption && (
           <figcaption className="mt-2 text-sm text-muted-foreground text-center italic">
-            {caption}
+            {displayCaption}
           </figcaption>
         )}
       </figure>
       
       <ImageModal
         src={src}
-        alt={alt || caption || ''}
+        alt={displayCaption}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />

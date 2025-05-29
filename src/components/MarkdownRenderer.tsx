@@ -73,8 +73,11 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
 
     // Transform ExpandableImage components to HTML
     content = content.replace(/<ExpandableImage\s+src="([^"]*)"(?:\s+alt="([^"]*)")?(?:\s+caption="([^"]*)")?\/>/gi, (match, src, alt, caption) => {
-      console.log('🔍 DEBUGGING: Replacing <ExpandableImage> with HTML img');
-      return `<img data-expandable="true" src="${src}" alt="${alt || ''}" data-caption="${caption || ''}" />`;
+      console.log('🔍 DEBUGGING: Replacing <ExpandableImage> with HTML img', { src, alt, caption });
+      // Ensure caption is preserved in both data-caption and alt attributes
+      const safeAlt = alt || '';
+      const safeCaption = caption || '';
+      return `<img src="${src}" alt="${safeAlt}" data-caption="${safeCaption}" />`;
     });
 
     console.log('🔍 DEBUGGING: Processed content length:', content.length);
@@ -137,38 +140,9 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
               return null;
             }
 
-            // Only use ExpandableImage for images that should be expandable
-            const shouldExpand = props['data-expandable'] === 'true';
             const caption = props['data-caption'] || '';
-            
-            console.log('🎯 Rendering image:', { src, alt, caption, shouldExpand });
-            
-            if (shouldExpand) {
-              return <ExpandableImageComponent 
-                src={src} 
-                alt={alt || ''} 
-                caption={caption} 
-                {...props} 
-              />;
-            }
-            
-            // For regular images, use a standard img tag
-            return (
-              <figure className="my-6">
-                <img
-                  src={src}
-                  alt={alt || ''}
-                  className="rounded-lg shadow-md max-w-full h-auto"
-                  loading="lazy"
-                  {...props}
-                />
-                {caption && (
-                  <figcaption className="mt-2 text-sm text-muted-foreground text-center italic">
-                    {caption}
-                  </figcaption>
-                )}
-              </figure>
-            );
+            console.log('🎯 Rendering ALL <img> tags with ExpandableImageComponent', { src, alt, caption });
+            return <ExpandableImageComponent src={src} alt={alt || ''} caption={caption} {...props} />;
           },
 
           // Custom link component to use React Router for internal links
