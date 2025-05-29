@@ -56,23 +56,17 @@ function buildContentIndex() {
             sidebarTitle: data.sidebarTitle || null,
             author: data.author || null,
             lastModified: data.lastModified || null,
-            order: data.order || null,
-            visibility: data.visibility || 'PUBLIC'
+            order: data.order || null
           };
           
-          // Only include public content in the index
-          if (metadata.visibility === 'PUBLIC') {
-            contentIndex[normalizedSlug] = {
-              slug: normalizedSlug,
-              metadata,
-              content: markdown.trim(),
-              lastModified: stat.mtime.toISOString()
-            };
-            
-            console.log(`✓ Processed: ${normalizedSlug}`);
-          } else {
-            console.log(`⚠ Skipped (${metadata.visibility}): ${normalizedSlug}`);
-          }
+          contentIndex[normalizedSlug] = {
+            slug: normalizedSlug,
+            metadata,
+            content: markdown.trim(),
+            lastModified: stat.mtime.toISOString()
+          };
+          
+          console.log(`✓ Processed: ${normalizedSlug}`);
         } catch (error) {
           console.error(`✗ Error processing ${itemPath}:`, error.message);
         }
@@ -92,24 +86,6 @@ function buildContentIndex() {
   Object.keys(contentIndex)
     .sort()
     .forEach(path => console.log(`   ${path}`));
-  
-  // Check for common navigation paths that might be missing
-  const commonPaths = [
-    '/docs/meet-pieces',
-    '/docs/meet-pieces/fundamentals',
-    '/docs/suite/desktop-app',
-    '/docs/ides/vscode',
-    '/docs/productivity/obsidian'
-  ];
-  
-  console.log('\n🔍 Checking common navigation paths:');
-  commonPaths.forEach(path => {
-    if (contentIndex[path]) {
-      console.log(`   ✓ ${path} - "${contentIndex[path].metadata.title}"`);
-    } else {
-      console.log(`   ✗ ${path} - NOT FOUND`);
-    }
-  });
   
   console.log('\n✅ Content index ready!\n');
 }
