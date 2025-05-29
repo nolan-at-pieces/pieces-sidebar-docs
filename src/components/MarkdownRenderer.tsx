@@ -1,3 +1,4 @@
+
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -88,7 +89,13 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
         ]}
         components={{
           // Custom div handler for callouts
-          div: ({ children, 'data-callout': calloutType, 'data-title': title, 'data-steps': isSteps, 'data-step': stepNumber, 'data-step-title': stepTitle, ...props }) => {
+          div: ({ children, ...props }: any) => {
+            const calloutType = props['data-callout'];
+            const title = props['data-title'];
+            const isSteps = props['data-steps'];
+            const stepNumber = props['data-step'];
+            const stepTitle = props['data-step-title'];
+            
             console.log('🔍 DEBUGGING: div component called with:', { calloutType, title, isSteps, stepNumber, stepTitle, props });
             
             if (calloutType) {
@@ -110,7 +117,10 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           },
 
           // Enhanced image handling
-          img: ({ src, alt, 'data-expandable': isExpandable, 'data-caption': caption, ...props }) => {
+          img: ({ src, alt, ...props }: any) => {
+            const isExpandable = props['data-expandable'];
+            const caption = props['data-caption'];
+            
             console.log('🔍 DEBUGGING: img component called with:', { src, alt, isExpandable, caption });
             
             if (isExpandable) {
