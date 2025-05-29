@@ -55,7 +55,11 @@ function buildContentIndex() {
           const normalizedSlug = '/docs/' + slug.replace(/\\/g, '/');
           
           // Use frontmatter path if available, otherwise use generated path
-          const finalPath = data.path || normalizedSlug;
+          // Always ensure the path starts with /docs/
+          let finalPath = data.path || normalizedSlug;
+          if (!finalPath.startsWith('/docs/')) {
+            finalPath = '/docs' + finalPath;
+          }
           
           // Handle metadata with better defaults
           const metadata = {
