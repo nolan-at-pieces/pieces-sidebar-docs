@@ -5,23 +5,29 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { exec } from "child_process";
 import { promisify } from "util";
+import type { Plugin, ViteDevServer } from "vite";
 
 const execAsync = promisify(exec);
 
 // Plugin to build content index during development
-function contentBuilderPlugin() {
+function contentBuilderPlugin(): Plugin {
   return {
     name: 'content-builder',
-    buildStart() {
+    async buildStart() {
       // Build content index at startup
-      return execAsync('node scripts/build-content.js').catch(console.error);
+      try {
+        await execAsync('node scripts/build-content.js');
+      } catch (error) {
+        console.error('Error building content:', error);
+      }
     },
-    configureServer(server) {
+    configureServer(server: ViteDevServer) {
       // Watch for markdown file changes in development
-      server.ws.on('file-changed', (file) => {
-        if (file.includes('public/content') && file.endsWith('.md')) {
+      server.middlewares.use((req, res, next) => {
+        if (req.url?.includes('.md') && req.method === 'POST') {
           execAsync('node scripts/build-content.js').catch(console.error);
         }
+        next();
       });
     }
   };
@@ -36,8 +42,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     contentBuilderPlugin(),
-    mode === 'development' &&
-    componentTagger(),
+    mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
