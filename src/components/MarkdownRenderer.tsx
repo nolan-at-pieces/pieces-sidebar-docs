@@ -17,11 +17,14 @@ interface MarkdownRendererProps {
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
   // Parse custom callout syntax
   const processCustomSyntax = (content: string) => {
+    console.log('Processing custom syntax for content:', content.substring(0, 200));
+    
     // Transform callout syntax: :::info[Title] or :::warning{title="Warning"}
     content = content.replace(
       /:::(\w+)(?:\[([^\]]*)\]|\{title="([^"]*)"\})?\n([\s\S]*?):::/g,
       (match, type, title1, title2, innerContent) => {
         const title = title1 || title2 || '';
+        console.log(`Found callout: type=${type}, title=${title}`);
         return `<Callout type="${type}" title="${title}">\n\n${innerContent.trim()}\n\n</Callout>`;
       }
     );
@@ -30,10 +33,30 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
     content = content.replace(
       /:::(\w+)\n([\s\S]*?):::/g,
       (match, type, innerContent) => {
+        console.log(`Found simple callout: type=${type}`);
         return `<Callout type="${type}">\n\n${innerContent.trim()}\n\n</Callout>`;
       }
     );
 
+    // Transform Steps syntax
+    content = content.replace(
+      /<Steps>([\s\S]*?)<\/Steps>/g,
+      (match, stepsContent) => {
+        console.log('Found Steps block');
+        return `<Steps>${stepsContent}</Steps>`;
+      }
+    );
+
+    // Transform Step syntax
+    content = content.replace(
+      /<Step number="(\d+)" title="([^"]*)">([\s\S]*?)<\/Step>/g,
+      (match, number, title, stepContent) => {
+        console.log(`Found Step: number=${number}, title=${title}`);
+        return `<Step number="${number}" title="${title}">${stepContent}</Step>`;
+      }
+    );
+
+    console.log('Processed content:', content.substring(0, 300));
     return content;
   };
 
@@ -66,18 +89,21 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             <ExpandableImage src={src} alt={alt} {...props} />
           ),
 
-          // Custom components
-          Callout: ({ type, title, children }: any) => (
-            <Callout type={type} title={title}>{children}</Callout>
-          ),
+          // Custom components - these are the key additions that were missing proper handling
+          Callout: ({ type, title, children, ...props }: any) => {
+            console.log('Rendering Callout component:', { type, title });
+            return <Callout type={type} title={title} {...props}>{children}</Callout>;
+          },
 
-          Steps: ({ children }: any) => (
-            <Steps>{children}</Steps>
-          ),
+          Steps: ({ children, ...props }: any) => {
+            console.log('Rendering Steps component');
+            return <Steps {...props}>{children}</Steps>;
+          },
 
-          Step: ({ number, title, children }: any) => (
-            <Step number={number} title={title}>{children}</Step>
-          ),
+          Step: ({ number, title, children, ...props }: any) => {
+            console.log('Rendering Step component:', { number, title });
+            return <Step number={parseInt(number)} title={title} {...props}>{children}</Step>;
+          },
 
           // Enhanced table styling using custom components
           table: ({ children, ...props }) => (

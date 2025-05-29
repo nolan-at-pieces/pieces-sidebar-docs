@@ -31,6 +31,7 @@ export function DynamicDocPage() {
         if (contentPage) {
           console.log('Content loaded successfully:', contentPage.metadata.title);
           console.log('Content preview:', contentPage.content.substring(0, 200));
+          console.log('Full content length:', contentPage.content.length);
           setContent(contentPage);
         } else {
           console.log('No content found for path:', fullPath);
@@ -74,6 +75,8 @@ export function DynamicDocPage() {
       </div>
     );
   }
+
+  console.log('Rendering DynamicDocPage with content:', content.metadata.title);
 
   return (
     <div className="max-w-4xl mx-auto">
