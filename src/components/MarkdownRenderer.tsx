@@ -1,3 +1,4 @@
+
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -87,6 +88,12 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           rehypeHighlight
         ]}
         components={{
+          // Explicit ExpandableImage component handler
+          ExpandableImage: ({ src, alt, caption, ...props }: any) => {
+            console.log('🎯 SUCCESS: Rendering ExpandableImage component', { src, alt, caption });
+            return <ExpandableImage src={src} alt={alt} caption={caption} {...props} />;
+          },
+
           // Custom div handler for callouts
           div: ({ children, ...props }: any) => {
             const calloutType = props['data-callout'];
