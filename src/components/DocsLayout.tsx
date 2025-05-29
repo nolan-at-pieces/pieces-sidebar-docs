@@ -3,31 +3,98 @@ import { useState } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, BookOpen, Zap, Download, Code, Puzzle, FileText, ChevronRight, Search } from "lucide-react";
+import { Menu, Search, ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const navigation = [
   {
-    title: "Getting Started",
+    title: "👋 Meet Pieces",
+    href: "/docs/meet-pieces",
     items: [
-      { title: "Introduction", href: "/docs/getting-started", icon: BookOpen },
-      { title: "Installation", href: "/docs/installation", icon: Download },
-      { title: "Quick Start", href: "/docs/quick-start", icon: Zap },
+      { title: "Fundamentals", href: "/docs/meet-pieces/fundamentals" },
+      { title: "Installation Guide | Windows", href: "/docs/meet-pieces/installation-windows" },
+      { title: "Installation Guide | macOS", href: "/docs/meet-pieces/installation-macos" },
+      { title: "Installation Guide | Linux", href: "/docs/meet-pieces/installation-linux" },
     ],
   },
   {
-    title: "Development",
+    title: "Troubleshooting",
+    href: "/docs/troubleshooting",
     items: [
-      { title: "API Reference", href: "/docs/api-reference", icon: Code },
-      { title: "Integrations", href: "/docs/integrations", icon: Puzzle },
-      { title: "Examples", href: "/docs/examples", icon: FileText },
+      { title: "Cross-Platform", href: "/docs/troubleshooting/cross-platform" },
+      { title: "macOS", href: "/docs/troubleshooting/macos" },
+      { title: "Windows", href: "/docs/troubleshooting/windows" },
+      { title: "Linux", href: "/docs/troubleshooting/linux" },
+    ],
+  },
+  {
+    title: "Pieces | Quick Guides",
+    href: "/docs/quick-guides",
+    items: [
+      { title: "Overview", href: "/docs/quick-guides/overview" },
+      { title: "Using Long-Term Memory Context", href: "/docs/quick-guides/long-term-memory" },
+      { title: "Using Pieces Copilot with Context", href: "/docs/quick-guides/copilot-context" },
+    ],
+  },
+  {
+    title: "Long-Term Memory Prompting Guide",
+    href: "/docs/long-term-memory-guide",
+    items: [
+      { title: "Use Cases and Example Prompts", href: "/docs/long-term-memory-guide/use-cases" },
+      { title: "Use Cases for the Pieces Workstream Activity View", href: "/docs/long-term-memory-guide/workstream-activity" },
+      { title: "General Long-Term Memory Prompting Tips", href: "/docs/long-term-memory-guide/prompting-tips" },
+    ],
+  },
+  {
+    title: "Pieces | Suite",
+    href: "/docs/suite",
+    items: [
+      { title: "Desktop App", href: "/docs/suite/desktop-app", isExpandable: true },
+      { title: "Download & Install", href: "/docs/suite/download-install" },
+      { title: "Onboarding", href: "/docs/suite/onboarding" },
+      { title: "Pieces Copilot", href: "/docs/suite/copilot", isExpandable: true },
+      { title: "Pieces Drive", href: "/docs/suite/drive", isExpandable: true },
+      { title: "Workstream Activity", href: "/docs/suite/workstream-activity" },
+      { title: "Navigation", href: "/docs/suite/navigation", isExpandable: true },
+      { title: "Settings", href: "/docs/suite/settings", isExpandable: true },
+      { title: "Actions & Keyboard Shortcuts", href: "/docs/suite/actions-shortcuts", isExpandable: true },
+      { title: "Troubleshooting", href: "/docs/suite/troubleshooting", isExpandable: true },
+    ],
+  },
+  {
+    title: "Core Dependencies",
+    href: "/docs/core-dependencies",
+    isExpandable: true,
+  },
+  {
+    title: "Pieces | MCP",
+    href: "/docs/mcp",
+    items: [
+      { title: "Introducing Pieces Model Context Protocol (MCP)", href: "/docs/mcp/introduction" },
+      { title: "MCP Prompting", href: "/docs/mcp/prompting" },
+      { title: "MCP → Cursor", href: "/docs/mcp/cursor" },
+      { title: "MCP → GitHub Copilot", href: "/docs/mcp/github-copilot" },
+      { title: "MCP → Goose", href: "/docs/mcp/goose" },
     ],
   },
 ];
 
 function DocsSidebar({ className }: { className?: string }) {
   const location = useLocation();
+  const [openSections, setOpenSections] = useState<string[]>([]);
+
+  const toggleSection = (sectionTitle: string) => {
+    setOpenSections(prev => 
+      prev.includes(sectionTitle) 
+        ? prev.filter(title => title !== sectionTitle)
+        : [...prev, sectionTitle]
+    );
+  };
+
+  const isActive = (href: string) => location.pathname === href;
+  const isSectionOpen = (sectionTitle: string) => openSections.includes(sectionTitle);
 
   return (
     <div className={cn("pb-12 w-64 h-full", className)}>
@@ -51,34 +118,82 @@ function DocsSidebar({ className }: { className?: string }) {
             </div>
           </div>
           
-          {navigation.map((section, index) => (
-            <div key={index} className="mb-8">
-              <h3 className="mb-3 px-4 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-                {section.title}
-              </h3>
-              <div className="space-y-1">
-                {section.items.map((item) => {
-                  const isActive = location.pathname === item.href;
-                  return (
+          <div className="space-y-2">
+            {navigation.map((section) => (
+              <div key={section.title}>
+                {section.items ? (
+                  <Collapsible 
+                    open={isSectionOpen(section.title)} 
+                    onOpenChange={() => toggleSection(section.title)}
+                  >
+                    <div className="flex items-center">
+                      <Link
+                        to={section.href}
+                        className={cn(
+                          "flex-1 flex items-center px-3 py-2 text-sm rounded-lg transition-colors",
+                          isActive(section.href)
+                            ? "bg-primary/10 text-primary"
+                            : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                        )}
+                      >
+                        <span>{section.title}</span>
+                      </Link>
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-auto p-1">
+                          {isSectionOpen(section.title) ? (
+                            <ChevronDown className="h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </CollapsibleTrigger>
+                    </div>
+                    <CollapsibleContent className="ml-4 mt-1 space-y-1">
+                      {section.items.map((item) => (
+                        <div key={item.href} className="flex items-center">
+                          <Link
+                            to={item.href}
+                            className={cn(
+                              "flex-1 px-3 py-2 text-sm rounded-lg transition-colors",
+                              isActive(item.href)
+                                ? "bg-primary/10 text-primary"
+                                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                            )}
+                          >
+                            {item.title}
+                          </Link>
+                          {item.isExpandable && (
+                            <Button variant="ghost" size="sm" className="h-auto p-1">
+                              <ChevronRight className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                ) : (
+                  <div className="flex items-center">
                     <Link
-                      key={item.href}
-                      to={item.href}
+                      to={section.href}
                       className={cn(
-                        "flex items-center space-x-3 px-4 py-2.5 text-sm rounded-lg transition-colors group",
-                        isActive
-                          ? "bg-primary/10 text-primary border-r-2 border-primary"
+                        "flex-1 flex items-center px-3 py-2 text-sm rounded-lg transition-colors",
+                        isActive(section.href)
+                          ? "bg-primary/10 text-primary"
                           : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                       )}
                     >
-                      <item.icon className={cn("w-4 h-4", isActive ? "text-primary" : "text-muted-foreground")} />
-                      <span className="flex-1">{item.title}</span>
-                      {isActive && <ChevronRight className="w-4 h-4" />}
+                      <span>{section.title}</span>
                     </Link>
-                  );
-                })}
+                    {section.isExpandable && (
+                      <Button variant="ghost" size="sm" className="h-auto p-1">
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

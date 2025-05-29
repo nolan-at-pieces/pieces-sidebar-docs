@@ -14,6 +14,9 @@ import ApiReference from "./pages/docs/ApiReference";
 import Integrations from "./pages/docs/Integrations";
 import Examples from "./pages/docs/Examples";
 import NotFound from "./pages/NotFound";
+import MeetPieces from "./pages/docs/MeetPieces";
+import Troubleshooting from "./pages/docs/Troubleshooting";
+import QuickGuides from "./pages/docs/QuickGuides";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +36,9 @@ const App = () => (
               <Route path="api-reference" element={<ApiReference />} />
               <Route path="integrations" element={<Integrations />} />
               <Route path="examples" element={<Examples />} />
+              <Route path="meet-pieces" element={<MeetPieces />} />
+              <Route path="troubleshooting" element={<Troubleshooting />} />
+              <Route path="quick-guides" element={<QuickGuides />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
