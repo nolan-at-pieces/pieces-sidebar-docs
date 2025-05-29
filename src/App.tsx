@@ -38,9 +38,23 @@ const App = () => (
               <Route path="integrations" element={<Integrations />} />
               <Route path="examples" element={<Examples />} />
               <Route path="meet-pieces" element={<MeetPieces />} />
+              <Route path="meet-pieces/fundamentals" element={<div>Fundamentals Page</div>} />
+              <Route path="meet-pieces/installation-windows" element={<div>Installation Guide | Windows</div>} />
+              <Route path="meet-pieces/installation-macos" element={<div>Installation Guide | macOS</div>} />
+              <Route path="meet-pieces/installation-linux" element={<div>Installation Guide | Linux</div>} />
               <Route path="troubleshooting" element={<Troubleshooting />} />
+              <Route path="troubleshooting/cross-platform" element={<div>Cross-Platform Troubleshooting</div>} />
+              <Route path="troubleshooting/macos" element={<div>macOS Troubleshooting</div>} />
+              <Route path="troubleshooting/windows" element={<div>Windows Troubleshooting</div>} />
+              <Route path="troubleshooting/linux" element={<div>Linux Troubleshooting</div>} />
               <Route path="quick-guides" element={<QuickGuides />} />
+              <Route path="quick-guides/overview" element={<div>Overview Page</div>} />
+              <Route path="quick-guides/long-term-memory" element={<div>Using Long-Term Memory Context</div>} />
+              <Route path="quick-guides/copilot-context" element={<div>Using Pieces Copilot with Context</div>} />
               <Route path="long-term-memory-guide" element={<LongTermMemoryGuide />} />
+              <Route path="long-term-memory-guide/use-cases" element={<div>Use Cases and Example Prompts</div>} />
+              <Route path="long-term-memory-guide/workstream-activity" element={<div>Use Cases for the Pieces Workstream Activity View</div>} />
+              <Route path="long-term-memory-guide/prompting-tips" element={<div>General Long-Term Memory Prompting Tips</div>} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -10,23 +10,23 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 
 const navigation = [
   {
-    title: "👋 Meet Pieces",
+    title: "Meet Pieces",
     href: "/docs/meet-pieces",
     items: [
       { title: "Fundamentals", href: "/docs/meet-pieces/fundamentals" },
       { title: "Installation Guide | Windows", href: "/docs/meet-pieces/installation-windows" },
       { title: "Installation Guide | macOS", href: "/docs/meet-pieces/installation-macos" },
       { title: "Installation Guide | Linux", href: "/docs/meet-pieces/installation-linux" },
-    ],
-  },
-  {
-    title: "Troubleshooting",
-    href: "/docs/troubleshooting",
-    items: [
-      { title: "Cross-Platform", href: "/docs/troubleshooting/cross-platform" },
-      { title: "macOS", href: "/docs/troubleshooting/macos" },
-      { title: "Windows", href: "/docs/troubleshooting/windows" },
-      { title: "Linux", href: "/docs/troubleshooting/linux" },
+      {
+        title: "Troubleshooting",
+        href: "/docs/troubleshooting",
+        items: [
+          { title: "Cross-Platform", href: "/docs/troubleshooting/cross-platform" },
+          { title: "macOS", href: "/docs/troubleshooting/macos" },
+          { title: "Windows", href: "/docs/troubleshooting/windows" },
+          { title: "Linux", href: "/docs/troubleshooting/linux" },
+        ],
+      },
     ],
   },
   {
@@ -37,53 +37,22 @@ const navigation = [
       { title: "Overview", href: "/docs/quick-guides/overview" },
       { title: "Using Long-Term Memory Context", href: "/docs/quick-guides/long-term-memory" },
       { title: "Using Pieces Copilot with Context", href: "/docs/quick-guides/copilot-context" },
-    ],
-  },
-  {
-    title: "Long-Term Memory Prompting Guide",
-    href: "/docs/long-term-memory-guide",
-    items: [
-      { title: "Use Cases and Example Prompts", href: "/docs/long-term-memory-guide/use-cases" },
-      { title: "Use Cases for the Pieces Workstream Activity View", href: "/docs/long-term-memory-guide/workstream-activity" },
-      { title: "General Long-Term Memory Prompting Tips", href: "/docs/long-term-memory-guide/prompting-tips" },
-    ],
-  },
-  {
-    title: "Pieces | Suite",
-    href: "/docs/suite",
-    items: [
-      { title: "Desktop App", href: "/docs/suite/desktop-app" },
-      { title: "Download & Install", href: "/docs/suite/download-install" },
-      { title: "Onboarding", href: "/docs/suite/onboarding" },
-      { title: "Pieces Copilot", href: "/docs/suite/copilot" },
-      { title: "Pieces Drive", href: "/docs/suite/drive" },
-      { title: "Workstream Activity", href: "/docs/suite/workstream-activity" },
-      { title: "Navigation", href: "/docs/suite/navigation" },
-      { title: "Settings", href: "/docs/suite/settings" },
-      { title: "Actions & Keyboard Shortcuts", href: "/docs/suite/actions-shortcuts" },
-      { title: "Troubleshooting", href: "/docs/suite/troubleshooting" },
-    ],
-  },
-  {
-    title: "Core Dependencies",
-    href: "/docs/core-dependencies",
-  },
-  {
-    title: "Pieces | MCP",
-    href: "/docs/mcp",
-    items: [
-      { title: "Introducing Pieces Model Context Protocol (MCP)", href: "/docs/mcp/introduction" },
-      { title: "MCP Prompting", href: "/docs/mcp/prompting" },
-      { title: "MCP → Cursor", href: "/docs/mcp/cursor" },
-      { title: "MCP → GitHub Copilot", href: "/docs/mcp/github-copilot" },
-      { title: "MCP → Goose", href: "/docs/mcp/goose" },
+      {
+        title: "Long-Term Memory Prompting Guide",
+        href: "/docs/long-term-memory-guide",
+        items: [
+          { title: "Use Cases and Example Prompts", href: "/docs/long-term-memory-guide/use-cases" },
+          { title: "Use Cases for the Pieces Workstream Activity View", href: "/docs/long-term-memory-guide/workstream-activity" },
+          { title: "General Long-Term Memory Prompting Tips", href: "/docs/long-term-memory-guide/prompting-tips" },
+        ],
+      },
     ],
   },
 ];
 
 function DocsSidebar({ className }: { className?: string }) {
   const location = useLocation();
-  const [openSections, setOpenSections] = useState<string[]>(["Pieces | Quick Guides", "Long-Term Memory Prompting Guide"]);
+  const [openSections, setOpenSections] = useState<string[]>(["Meet Pieces", "Pieces | Quick Guides"]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const toggleSection = (sectionTitle: string) => {
@@ -97,17 +66,99 @@ function DocsSidebar({ className }: { className?: string }) {
   const isActive = (href: string) => location.pathname === href;
   const isSectionOpen = (sectionTitle: string) => openSections.includes(sectionTitle);
 
-  // Filter navigation based on search term
-  const filteredNavigation = navigation.map(section => ({
-    ...section,
-    items: section.items?.filter(item => 
-      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      section.title.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  })).filter(section => 
-    section.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (section.items && section.items.length > 0)
-  );
+  const filterItems = (items: any[], searchTerm: string): any[] => {
+    return items.filter(item => {
+      const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
+      if (item.items) {
+        const filteredSubItems = filterItems(item.items, searchTerm);
+        return matchesSearch || filteredSubItems.length > 0;
+      }
+      return matchesSearch;
+    }).map(item => {
+      if (item.items) {
+        return {
+          ...item,
+          items: filterItems(item.items, searchTerm)
+        };
+      }
+      return item;
+    });
+  };
+
+  const filteredNavigation = searchTerm 
+    ? navigation.map(section => ({
+        ...section,
+        items: section.items ? filterItems(section.items, searchTerm) : undefined
+      })).filter(section => 
+        section.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (section.items && section.items.length > 0)
+      )
+    : navigation;
+
+  const renderNavItem = (item: any, depth = 0) => {
+    const hasSubItems = item.items && item.items.length > 0;
+    const paddingClass = depth === 0 ? "px-3" : depth === 1 ? "px-6" : "px-9";
+
+    if (hasSubItems) {
+      return (
+        <div key={item.title}>
+          <Collapsible 
+            open={isSectionOpen(item.title)} 
+            onOpenChange={() => toggleSection(item.title)}
+          >
+            <div className="flex items-center">
+              {item.href ? (
+                <Link
+                  to={item.href}
+                  className={cn(
+                    "flex-1 flex items-center py-2 text-sm rounded-lg transition-colors break-words whitespace-normal leading-tight",
+                    paddingClass,
+                    isActive(item.href)
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  )}
+                >
+                  <span className="break-words whitespace-normal leading-tight">{item.title}</span>
+                </Link>
+              ) : (
+                <div className={cn("flex-1 flex items-center py-2 text-sm", paddingClass)}>
+                  <span className="break-words whitespace-normal leading-tight font-semibold text-foreground">{item.title}</span>
+                </div>
+              )}
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-auto p-1 flex-shrink-0 mr-2">
+                  {isSectionOpen(item.title) ? (
+                    <ChevronDown className="h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4" />
+                  )}
+                </Button>
+              </CollapsibleTrigger>
+            </div>
+            <CollapsibleContent className="space-y-1">
+              {item.items.map((subItem: any) => renderNavItem(subItem, depth + 1))}
+            </CollapsibleContent>
+          </Collapsible>
+        </div>
+      );
+    }
+
+    return (
+      <Link
+        key={item.href}
+        to={item.href}
+        className={cn(
+          "block py-2 text-sm rounded-lg transition-colors break-words whitespace-normal leading-tight",
+          paddingClass,
+          isActive(item.href)
+            ? "bg-primary/10 text-primary"
+            : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+        )}
+      >
+        {item.title}
+      </Link>
+    );
+  };
 
   return (
     <div className={cn("pb-12 w-64 h-full", className)}>
@@ -136,100 +187,17 @@ function DocsSidebar({ className }: { className?: string }) {
           <div className="space-y-2">
             {filteredNavigation.map((section) => (
               <div key={section.title}>
-                {section.items ? (
+                {section.isSection ? (
                   <div>
-                    {section.isSection ? (
-                      <Collapsible 
-                        open={isSectionOpen(section.title)} 
-                        onOpenChange={() => toggleSection(section.title)}
-                      >
-                        <div className="flex items-center">
-                          <CollapsibleTrigger asChild>
-                            <Button variant="ghost" className="flex-1 justify-start px-3 py-2 text-sm font-semibold">
-                              <span className="text-blue-600 break-words whitespace-normal leading-tight">{section.title}</span>
-                              {isSectionOpen(section.title) ? (
-                                <ChevronDown className="ml-auto h-4 w-4 flex-shrink-0" />
-                              ) : (
-                                <ChevronRight className="ml-auto h-4 w-4 flex-shrink-0" />
-                              )}
-                            </Button>
-                          </CollapsibleTrigger>
-                        </div>
-                        <CollapsibleContent className="ml-4 mt-1 space-y-1">
-                          {section.items.map((item) => (
-                            <Link
-                              key={item.href}
-                              to={item.href}
-                              className={cn(
-                                "block px-3 py-2 text-sm rounded-lg transition-colors break-words whitespace-normal leading-tight",
-                                isActive(item.href)
-                                  ? "bg-primary/10 text-primary"
-                                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                              )}
-                            >
-                              {item.title}
-                            </Link>
-                          ))}
-                        </CollapsibleContent>
-                      </Collapsible>
-                    ) : (
-                      <Collapsible 
-                        open={isSectionOpen(section.title)} 
-                        onOpenChange={() => toggleSection(section.title)}
-                      >
-                        <div className="flex items-center">
-                          <Link
-                            to={section.href}
-                            className={cn(
-                              "flex-1 flex items-center px-3 py-2 text-sm rounded-lg transition-colors break-words whitespace-normal leading-tight",
-                              isActive(section.href)
-                                ? "bg-primary/10 text-primary"
-                                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                            )}
-                          >
-                            <span className="break-words whitespace-normal leading-tight">{section.title}</span>
-                          </Link>
-                          <CollapsibleTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-auto p-1 flex-shrink-0">
-                              {isSectionOpen(section.title) ? (
-                                <ChevronDown className="h-4 w-4" />
-                              ) : (
-                                <ChevronRight className="h-4 w-4" />
-                              )}
-                            </Button>
-                          </CollapsibleTrigger>
-                        </div>
-                        <CollapsibleContent className="ml-4 mt-1 space-y-1">
-                          {section.items.map((item) => (
-                            <Link
-                              key={item.href}
-                              to={item.href}
-                              className={cn(
-                                "block px-3 py-2 text-sm rounded-lg transition-colors break-words whitespace-normal leading-tight",
-                                isActive(item.href)
-                                  ? "bg-primary/10 text-primary"
-                                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                              )}
-                            >
-                              {item.title}
-                            </Link>
-                          ))}
-                        </CollapsibleContent>
-                      </Collapsible>
-                    )}
+                    <div className="px-3 py-2 text-sm font-semibold text-foreground break-words whitespace-normal leading-tight">
+                      {section.title}
+                    </div>
+                    <div className="ml-2 space-y-1">
+                      {section.items?.map((item) => renderNavItem(item))}
+                    </div>
                   </div>
                 ) : (
-                  <Link
-                    to={section.href}
-                    className={cn(
-                      "flex items-center px-3 py-2 text-sm rounded-lg transition-colors break-words whitespace-normal leading-tight",
-                      isActive(section.href)
-                        ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                    )}
-                  >
-                    <span className="break-words whitespace-normal leading-tight">{section.title}</span>
-                  </Link>
+                  renderNavItem(section)
                 )}
               </div>
             ))}
