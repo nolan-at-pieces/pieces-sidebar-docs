@@ -16,6 +16,7 @@ import QuickStart from "./pages/docs/QuickStart";
 import ApiReference from "./pages/docs/ApiReference";
 import Integrations from "./pages/docs/Integrations";
 import Examples from "./pages/docs/Examples";
+import MeetPieces from "./pages/docs/MeetPieces";
 import Troubleshooting from "./pages/docs/Troubleshooting";
 import QuickGuides from "./pages/docs/QuickGuides";
 import LongTermMemoryGuide from "./pages/docs/LongTermMemoryGuide";
@@ -41,7 +42,7 @@ const App = () => (
               <Route path="examples" element={<Examples />} />
               
               {/* Specific routes that we want to handle with existing components */}
-              <Route path="meet-pieces/*" element={<DynamicDocPage />} />
+              <Route path="meet-pieces" element={<MeetPieces />} />
               <Route path="troubleshooting" element={<Troubleshooting />} />
               <Route path="quick-guides" element={<QuickGuides />} />
               <Route path="long-term-memory-guide" element={<LongTermMemoryGuide />} />
