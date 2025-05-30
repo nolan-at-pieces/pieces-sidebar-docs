@@ -9,6 +9,8 @@ visibility: "PUBLIC"
 
 ## Pieces CLI Commands
 
+# i love cheese
+
 Below is a table containing all the commands available for use in the Pieces CLI.
 
 <Image src="https://storage.googleapis.com/hashnode_product_documentation_assets/cli_assets/commands/pieces_help.png" alt="" align="center" fullwidth="true" />
