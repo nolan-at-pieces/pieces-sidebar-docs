@@ -5,6 +5,8 @@ visibility: "PUBLIC"
 ---
 ***
 
+# Cheese
+
 ## Having Trouble with Pieces CLI?
 
 If the Pieces CLI isn't working as expected, follow these steps:
