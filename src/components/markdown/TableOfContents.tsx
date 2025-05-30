@@ -40,47 +40,16 @@ export function TableOfContents({ content }: TableOfContentsProps) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Find all visible entries
         const visibleEntries = entries.filter(entry => entry.isIntersecting);
-        
         if (visibleEntries.length > 0) {
-          // Sort by intersection ratio and position to get the most prominent heading
-          const sortedEntries = visibleEntries.sort((a, b) => {
-            const aRect = a.boundingClientRect;
-            const bRect = b.boundingClientRect;
-            
-            // Prefer headings closer to the top of the viewport
-            return Math.abs(aRect.top) - Math.abs(bRect.top);
-          });
-          
-          setActiveId(sortedEntries[0].target.id);
-        } else {
-          // If no headings are intersecting, find the closest one above the viewport
-          const allHeadings = tocItems.map(item => document.getElementById(item.id)).filter(Boolean);
-          let closestHeading = null;
-          let closestDistance = Infinity;
-          
-          allHeadings.forEach(heading => {
-            if (heading) {
-              const rect = heading.getBoundingClientRect();
-              if (rect.top < 0) { // Above viewport
-                const distance = Math.abs(rect.top);
-                if (distance < closestDistance) {
-                  closestDistance = distance;
-                  closestHeading = heading;
-                }
-              }
-            }
-          });
-          
-          if (closestHeading) {
-            setActiveId(closestHeading.id);
-          }
+          // Get the first visible heading
+          const firstVisible = visibleEntries[0];
+          setActiveId(firstVisible.target.id);
         }
       },
       {
-        rootMargin: '-10% 0px -80% 0px',
-        threshold: [0, 0.25, 0.5, 0.75, 1]
+        rootMargin: '-20% 0px -70% 0px',
+        threshold: 0
       }
     );
 
@@ -106,25 +75,25 @@ export function TableOfContents({ content }: TableOfContentsProps) {
 
   return (
     <div className="w-64 shrink-0">
-      <div className="sticky top-6 max-h-[calc(100vh-3rem)]">
+      <div className="sticky top-6">
         <h3 className="text-sm font-semibold mb-4 text-muted-foreground uppercase tracking-wider">
           On this page
         </h3>
-        <ScrollArea className="h-full max-h-[calc(100vh-8rem)]">
+        <ScrollArea className="h-[calc(100vh-8rem)]">
           <nav className="space-y-1">
             {tocItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToHeading(item.id)}
-                className={`block w-full text-left text-sm transition-all duration-200 hover:text-foreground ${
+                className={`block w-full text-left text-sm transition-colors hover:text-foreground ${
                   activeId === item.id 
-                    ? 'text-foreground font-medium border-l-2 border-primary bg-primary/5' 
-                    : 'text-muted-foreground border-l-2 border-transparent hover:border-muted'
+                    ? 'text-foreground font-medium border-l-2 border-primary' 
+                    : 'text-muted-foreground border-l-2 border-transparent'
                 } ${
                   item.level === 1 ? 'pl-3' : 
                   item.level === 2 ? 'pl-7' : 
                   'pl-11'
-                } py-1.5 rounded-r-md`}
+                } py-1.5`}
               >
                 {item.text}
               </button>

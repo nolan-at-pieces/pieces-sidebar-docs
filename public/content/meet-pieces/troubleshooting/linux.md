@@ -1,21 +1,21 @@
-
 ---
 title: "Issues | Linux"
 path: "/meet-pieces/troubleshooting/linux"
 visibility: "PUBLIC"
 ---
+***
 
----
+<Image src="https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/troubleshooting/linux/troubleshooting_linux.png" alt="Displaying linux.png" align="left" fullwidth="true" />
 
-<ExpandableImage src="https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/troubleshooting/linux/troubleshooting_linux.png" alt="Linux Troubleshooting" caption="Linux troubleshooting guide for Pieces" />
-
----
+***
 
 ## Installation & Updating Fixes
 
 You can find detailed instructions on updating PiecesOS and the Pieces Desktop App on your Linux device using the terminal.
 
 Additionally, you can check your system's OS and hardware specifications to ensure they meet the minimum recommended requirements.
+
+<on-device-storage />
 
 ## Versions & Updates
 
@@ -28,66 +28,68 @@ On Linux, PiecesOS and the Pieces Desktop App are distributed via snaps (for Ubu
 To update PiecesOS on Linux:
 
 1. Run `snap info pieces-os` to check the current version of PiecesOS
+
 2. Run `sudo snap refresh` to update PiecesOS if a newer version is available
 
-<ExpandableImage src="https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/troubleshooting/linux/snap_refresh_POS.gif" alt="Updating PiecesOS via snap" caption="Terminal commands to update PiecesOS using snap" />
+<Image src="https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/troubleshooting/linux/snap_refresh_POS.gif" alt="" align="center" fullwidth="true" />
 
 ### Updating the Pieces Desktop App
 
 Similar to PiecesOS, you can update the Pieces Desktop App by:
 
 1. Running `snap info pieces-for-developers` to check the current version
+
 2. Running `sudo snap refresh` to apply any available updates
 
-<ExpandableImage src="https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/troubleshooting/linux/snap_refresh_PFD.gif" alt="Updating Pieces Desktop App via snap" caption="Terminal commands to update Pieces Desktop App using snap" />
+<Image src="https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/troubleshooting/linux/snap_refresh_PFD.gif" alt="" align="center" fullwidth="true" />
 
 ## Common Installation Issues
 
-Official support is provided for **Ubuntu 22.04+ and Ubuntu-based distributions.** Other distributions may work but *aren't guaranteed.*
+Official support is provided for **Ubuntu 22.04+ and Ubuntu-based distributions.** Other distributions may work but *aren’t guaranteed.*
 
 ### Checking Distribution Compatibility
 
-Ensure you're running a supported Ubuntu-based distribution.
+Ensure you’re running a supported Ubuntu-based distribution.
 
-If not, consider switching to a supported environment, as installation on non-Ubuntu distributions isn't guaranteed.
+If not, consider switching to a supported environment, as installation on non-Ubuntu distributions isn’t guaranteed.
 
 ### Updating Snapd
 
 Snap-based installations require an up-to-date snap `daemon`:
 
-- Run `sudo snap refresh` to ensure `snapd` and its packages are current
+* Run `sudo snap refresh` to ensure `snapd` and its packages are current
 
 ### Adjusting Graphics & Display Settings
 
 If installation or UI issues persist, consider the following:
 
-- **Switch Between X11 and Wayland:** Some applications may work better on one display protocol than the other. Try switching to X11 for compatibility or Wayland for newer features. You can usually select this at the login screen.
+* **Switch Between X11 and Wayland:** Some applications may work better on one display protocol than the other. Try switching to X11 for compatibility or Wayland for newer features. You can usually select this at the login screen.
 
-:::alert
-The LTM-2 Engine is designed to work with the X11 Window Manager. Other Window Managers, such as Wayland, are *not compatible.* This means that long-term memory functionality with certain Linux Virtual Machines (VMs) is not possible at this time.
-:::
+<Callout type="alert">
+  The LTM-2 Engine is designed to work with the X11 Window Manager. Other Window Managers, such as Wayland, are *not compatible.* This means that long-term memory functionality with certain Linux Virtual Machines (VMs) is not possible at this time.
+</Callout>
 
-- **Update your GPU Drivers:** Ensure they are up to date. For NVIDIA, check for proprietary driver updates. AMD and Intel users should verify that their open-source drivers are up to date.
+* **Update your GPU Drivers:** Ensure they are up to date. For NVIDIA, check for proprietary driver updates. AMD and Intel users should verify that their open-source drivers are up to date.
 
-- **Optimize Graphics Configurations:** Use tools like `nvidia-settings`, `radeon-profile`, or similar utilities to adjust your GPU settings for better performance and stability.
+* **Optimize Graphics Configurations:** Use tools like `nvidia-settings`, `radeon-profile`, or similar utilities to adjust your GPU settings for better performance and stability.
 
 These adjustments can resolve many graphical and display-related issues you may experience while using Pieces for Developers or PiecesOS.
 
 ## Checking System Information
 
-You can verify your system's hardware configuration and ensure it meets recommended specifications by running specific commands in your terminal.
+You can verify your system’s hardware configuration and ensure it meets recommended specifications by running specific commands in your terminal.
 
 ### Checking CPU Information
 
 To determine your CPU type and find other important information, type `lscpu` in your terminal and press `Enter`.
 
-<ExpandableImage src="https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/troubleshooting/linux/lscpu_UBUNTU.png" alt="CPU Information via lscpu" caption="Terminal output showing CPU information using lscpu command" />
+<Image src="https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/troubleshooting/linux/lscpu_UBUNTU.png" alt="" align="center" fullwidth="true" />
 
 ### Checking GPU Information
 
 To determine your GPU type and find other important information, `lspci | grep -i vga` in your terminal and press `Enter`.
 
-<ExpandableImage src="https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/troubleshooting/linux/lscpi_UBUNTU.png" alt="GPU Information via lspci" caption="Terminal output showing GPU information using lspci command" />
+<Image src="https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/troubleshooting/linux/lscpi_UBUNTU.png" alt="" align="center" fullwidth="true" />
 
 Confirm that your CPU, GPU, and memory resources are sufficient for running PiecesOS and local AI models (if applicable).
 
@@ -97,25 +99,17 @@ Click here for documentation on [what we recommend for minimum device specificat
 
 If the Pieces Installer is not working as intended, you could have an outdated version of Ubuntu. The minimum Ubuntu version that Pieces will run on is **Ubuntu 18**.
 
-To check what version of Ubuntu you're running:
+To check what version of Ubuntu you’re running:
 
-<Steps>
-<Step title="Open Settings">
-Open the **Settings** on Ubuntu
-</Step>
+* Open the **Settings** on Ubuntu
 
-<Step title="Navigate to System">
-Locate the **System** section at the bottom of the left-hand side menu and click it
-</Step>
+* Locate the **System** section at the bottom of the left-hand side menu and click it
 
-<Step title="Check About Section">
-Open the **About** section and locate the **Operating System** label
-</Step>
-</Steps>
+* Open the **About** section and locate the **Operating System** label
 
 This section will will display your Ubuntu version information.
 
-<ExpandableImage src="https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/troubleshooting/linux/settings_about_system.gif" alt="Checking Ubuntu version in Settings" caption="Steps to check Ubuntu version through system settings" />
+<Image src="https://storage.googleapis.com/hashnode_product_documentation_assets/meet_pieces_assets/meet_pieces/troubleshooting/linux/settings_about_system.gif" alt="" align="center" fullwidth="true" />
 
 ### Consulting Online Resources
 
@@ -123,6 +117,6 @@ If you encounter persistent installation issues, consult online forums or commun
 
 ## Restart & Retry
 
-If you've updated components, checked hardware, and adjusted configurations without success, restart your machine and try again.
+If you’ve updated components, checked hardware, and adjusted configurations without success, restart your machine and try again.
 
-If the problem persists, please open a [GitHub issue](https://github.com/pieces-app/support/issues) for further assistance, or book a call with our engineers.
+If the problem persists, please open a <a target="_blank" href="https://github.com/pieces-app/support/issues">GitHub issue</a> for further assistance, or book a call with our engineers.

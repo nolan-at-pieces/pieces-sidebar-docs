@@ -1,31 +1,31 @@
-
 ---
 title: "Getting to Know Pieces"
 path: "/meet-pieces"
 visibility: "PUBLIC"
 ---
+***
 
-<ExpandableImage src="https://cdn.hashnode.com/res/hashnode/image/upload/v1734014941536/9c298363-d6b4-4e4a-9965-72db0fa59bc6.png" alt="Pieces for Developers Introduction" />
+<Image src="https://cdn.hashnode.com/res/hashnode/image/upload/v1734014941536/9c298363-d6b4-4e4a-9965-72db0fa59bc6.png" alt="" align="center" fullwidth="true" />
 
----
+***
 
 ## Introducing Pieces for Developers
 
-This documentation is designed to provide a high-level overview of [Pieces' features and functionalities](https://docs.pieces.app/products/meet-pieces/fundamentals), with a quick-start and troubleshooting guides for [macOS](https://docs.pieces.app/products/meet-pieces/macos-installation-guide), [Windows](https://docs.pieces.app/products/meet-pieces/windows-installation-guide), and [Linux](https://docs.pieces.app/products/meet-pieces/linux-installation-guide) to help you get started with Pieces as quickly as possible.
+This documentation is designed to provide a high-level overview of <a target="_blank" href="https://docs.pieces.app/products/meet-pieces/fundamentals">Pieces' features and functionalities</a>, with a quick-start and troubleshooting guides for <a target="_blank" href="https://docs.pieces.app/products/meet-pieces/macos-installation-guide">macOS</a>, <a target="_blank" href="https://docs.pieces.app/products/meet-pieces/windows-installation-guide">Windows</a>, and <a target="_blank" href="https://docs.pieces.app/products/meet-pieces/linux-installation-guide">Linux</a> to help you get started with Pieces as quickly as possible.
 
-Let's answer a few basic questions:
+Let’s answer a few basic questions:
 
 ### What is Pieces?
 
 At its core, Pieces is an all-in-one productivity tool that helps developers work *smarter*, not harder, by anchoring engineers to their workflow with the power of the **Long-Term Memory Engine, Pieces Drive,** and the **Pieces Copilot.**
 
-There are **3** core pillars of Pieces functionality:
+There are **\[3]** core pillars of Pieces functionality:
 
-1. **[Long-Term Memory Engine (LTM-2)](https://docs.pieces.app/products/meet-pieces/fundamentals#ltm-2)**: A powerful, AI-powered live context framework that understands what you're working on across your entire development workflow. The LTM-2 helps by outsourcing the burden of memory and retrieval from the developer to AI to maximize space for creativity driven by human intent.
+1. [Long-Term Memory Engine (LTM-2)](https://docs.pieces.app/products/meet-pieces/fundamentals#ltm-2): A powerful, AI-powered live context framework that understands what you’re working on across your entire development workflow. The LTM-2 helps by outsourcing the burden of memory and retrieval from the developer to AI to maximize space for creativity driven by human intent.
 
-2. **[Pieces Drive](https://docs.pieces.app/products/meet-pieces/fundamentals#pieces-drive)**: The ability to save, search, reference, reuse, and share small developer resources like code snippets, screenshots, links, and text notes.
+2. [Pieces Drive](https://docs.pieces.app/products/meet-pieces/fundamentals#pieces-drive): The ability to save, search, reference, reuse, and share small developer resources like code snippets, screenshots, links, and text notes.
 
-3. **[Pieces Copilot](https://docs.pieces.app/products/meet-pieces/fundamentals#pieces-copilot)**: An intelligent assistant that helps with generating code, answering questions, and adding code comments while utilizing a LLM of your choice—featuring an adjustable context window ranging from conversation-only to entire project repositories.
+3. [Pieces Copilot](https://docs.pieces.app/products/meet-pieces/fundamentals#pieces-copilot): An intelligent assistant that helps with generating code, answering questions, and adding code comments while utilizing a LLM of your choice—featuring an adjustable context window ranging from conversation-only to entire project repositories.
 
 ### Who is Pieces For?
 
@@ -35,11 +35,11 @@ Pieces is an **excellent productivity option for developers of all levels** and 
 
 If you find yourself …
 
-1. **Preserving Workflow Context:** If you're wondering where you left off with trying to untangle that permissions mess in Google Cloud Console or Firestore database, the [LTM-2](https://docs.pieces.app/products/meet-pieces/fundamentals#ltm-2) is an invaluable resource that can provide deep-links and anchors in the form of URLs and other helpful context.
+1. **Preserving Workflow Context:** If you’re wondering where you left off with trying to untangle that permissions mess in Google Cloud Console or Firestore database, the [LTM-2](https://docs.pieces.app/products/meet-pieces/fundamentals#ltm-2) is an invaluable resource that can provide deep-links and anchors in the form of URLs and other helpful context.
 
 2. **Managing Developer Materials**: If you find yourself needing to repurpose or refresh your memory with small developer resources throughout your workflow, the [Pieces Drive](https://docs.pieces.app/products/meet-pieces/fundamentals#pieces-drive) can help you stay organized while providing an efficient pipeline for referencing and reusing them.
 
-3. **Needing Code Assistance:** Stuck on a bug, or don't know how to solve a complex algorithmic efficiency problem? Can't center that `div`? Ask [Pieces Copilot](https://docs.pieces.app/products/meet-pieces/fundamentals#pieces-copilot) to help you understand your function, script, code file or entire project and generate code to insert directly into your active file.
+3. **Needing Code Assistance:** Stuck on a bug, or don’t know how to solve a complex algorithmic efficiency problem? Can’t center that `div`? Ask [Pieces Copilot](https://docs.pieces.app/products/meet-pieces/fundamentals#pieces-copilot) to help you understand your function, script, code file or entire project and generate code to insert directly into your active file.
 
 … then Pieces is intelligently designed with *you,* the developer, in mind.
 
@@ -55,12 +55,14 @@ We designed it this way to ensure that your data—including machine learning pr
 
 Click one of the links below to fast-forward to the Pieces Suite installation guide for your operating system:
 
-- [macOS](https://docs.pieces.app/products/meet-pieces/macos-installation-guide)
-- [Windows](https://docs.pieces.app/products/meet-pieces/windows-installation-guide)
-- [Linux](https://docs.pieces.app/products/meet-pieces/linux-installation-guide)
+* [macOS](https://docs.pieces.app/products/meet-pieces/macos-installation-guide)
 
-:::alert
-PiecesOS is required for any Pieces Software to work, including the Pieces Desktop App.
+* [Windows](https://docs.pieces.app/products/meet-pieces/windows-installation-guide)
 
-However, the Pieces Desktop App is not itself required—but it is recommended to install both PiecesOS and the Pieces Desktop App.
-:::
+* [Linux](https://docs.pieces.app/products/meet-pieces/linux-installation-guide)
+
+<Callout type="alert">
+  PiecesOS is required for any Pieces Software to work, including the Pieces Desktop App.
+
+  However, the Pieces Desktop App is not itself required—but it is recommended to install both PiecesOS and the Pieces Desktop App.
+</Callout>
