@@ -1,5 +1,5 @@
 ---
-title: "Pieces Copilot"
+title: "Pieces Copilots"
 path: "/cli/copilot"
 visibility: "PUBLIC"
 ---
