@@ -5,6 +5,8 @@ visibility: "PUBLIC"
 ---
 ***
 
+# I love cheese
+
 ### Using Pieces Drive in the Pieces CLI
 
 The Pieces CLI boosts development productivity and saves time with features like [saving](https://docs.pieces.app/products/cli/drive/save-snippets) and [reusing](https://docs.pieces.app/products/cli/drive/search-reuse) materials, ensuring your important code is always accessible.
