@@ -5,11 +5,9 @@ visibility: "PUBLIC"
 ---
 ***
 
-# Edit
+# Test
 
 ## Pieces CLI Commands
-
-# i love cheese
 
 Below is a table containing all the commands available for use in the Pieces CLI.
 
