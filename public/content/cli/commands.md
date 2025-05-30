@@ -1,15 +1,11 @@
 ---
-title: "Commands"
+title: "Cool"
 path: "/cli/commands"
 visibility: "PUBLIC"
 ---
 ***
 
-# Edit
-
 ## Pieces CLI Commands
-
-# i love cheese
 
 Below is a table containing all the commands available for use in the Pieces CLI.
 
