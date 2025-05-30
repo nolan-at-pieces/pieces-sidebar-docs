@@ -5,6 +5,8 @@ visibility: "PUBLIC"
 ---
 ***
 
+# Edit
+
 ## Pieces CLI Commands
 
 Below is a table containing all the commands available for use in the Pieces CLI.
