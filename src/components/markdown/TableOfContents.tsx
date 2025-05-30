@@ -75,11 +75,11 @@ export function TableOfContents({ content }: TableOfContentsProps) {
 
   return (
     <div className="w-64 shrink-0">
-      <div className="sticky top-6">
+      <div className="sticky top-6 max-h-[calc(100vh-3rem)]">
         <h3 className="text-sm font-semibold mb-4 text-muted-foreground uppercase tracking-wider">
           On this page
         </h3>
-        <ScrollArea className="h-[calc(100vh-8rem)]">
+        <ScrollArea className="h-full max-h-[calc(100vh-8rem)]">
           <nav className="space-y-1">
             {tocItems.map((item) => (
               <button
