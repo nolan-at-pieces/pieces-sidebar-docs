@@ -9,8 +9,7 @@ import DocsLayout from "./components/DocsLayout";
 import { DynamicDocPage } from "./components/DynamicDocPage";
 import NotFound from "./pages/NotFound";
 
-// Import existing page components
-import GettingStarted from "./pages/docs/GettingStarted";
+// Import existing page components (keeping only the ones that don't conflict with markdown)
 import Installation from "./pages/docs/Installation";
 import QuickStart from "./pages/docs/QuickStart";
 import ApiReference from "./pages/docs/ApiReference";
@@ -32,8 +31,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/docs" element={<DocsLayout />}>
-              {/* Legacy routes for compatibility */}
-              <Route path="getting-started" element={<GettingStarted />} />
+              {/* Legacy routes for compatibility - keeping only non-conflicting ones */}
               <Route path="installation" element={<Installation />} />
               <Route path="quick-start" element={<QuickStart />} />
               <Route path="api-reference" element={<ApiReference />} />
@@ -46,7 +44,7 @@ const App = () => (
               <Route path="quick-guides" element={<QuickGuides />} />
               <Route path="long-term-memory-guide" element={<LongTermMemoryGuide />} />
               
-              {/* Dynamic content routes - catch all other routes */}
+              {/* Dynamic content routes - catch all other routes including getting-started */}
               <Route path="*" element={<DynamicDocPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
