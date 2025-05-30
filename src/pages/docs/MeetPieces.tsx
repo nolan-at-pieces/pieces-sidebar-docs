@@ -1,6 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
 
 export default function GettingToKnowPieces() {
   return (
@@ -11,18 +9,16 @@ export default function GettingToKnowPieces() {
       </p>
 
       <div className="flex justify-center my-8">
-        <Image
+        <img
           src="https://cdn.hashnode.com/res/hashnode/image/upload/v1734014941536/9c298363-d6b4-4e4a-9965-72db0fa59bc6.png?auto=compress,format&format=webp&q=75"
           alt="Pieces ecosystem diagram"
-          width={960}
-          height={540}
-          className="rounded-lg shadow-lg"
+          className="rounded-lg shadow-lg max-w-full h-auto"
         />
       </div>
 
       <h2>Introducing Pieces for Developers</h2>
       <p>
-        This documentation is designed to provide a high-level overview of <Link href="/docs/features">Pieces' features and functionalities</Link>, with a quick-start and troubleshooting guide for <Link href="/docs/mac">macOS</Link>, <Link href="/docs/windows">Windows</Link>, and <Link href="/docs/linux">Linux</Link> to help you get started as quickly as possible.
+        This documentation is designed to provide a high-level overview of <a href="/docs/features">Pieces' features and functionalities</a>, with a quick-start and troubleshooting guide for <a href="/docs/mac">macOS</a>, <a href="/docs/windows">Windows</a>, and <a href="/docs/linux">Linux</a> to help you get started as quickly as possible.
       </p>
 
       <h3>What is Pieces?</h3>
@@ -32,7 +28,7 @@ export default function GettingToKnowPieces() {
 
       <ol>
         <li>
-          <strong>Long-Term Memory Engine (LTM-2):</strong> A powerful, AI-powered live context framework that understands what you’re working on across your entire development workflow.
+          <strong>Long-Term Memory Engine (LTM-2):</strong> A powerful, AI-powered live context framework that understands what you're working on across your entire development workflow.
         </li>
         <li>
           <strong>Pieces Drive:</strong> The ability to save, search, reference, reuse, and share small developer resources like code snippets, screenshots, links, and text notes.
@@ -71,9 +67,9 @@ export default function GettingToKnowPieces() {
 
       <p>Install instructions:</p>
       <ul>
-        <li><Link href="/docs/mac">macOS</Link></li>
-        <li><Link href="/docs/windows">Windows</Link></li>
-        <li><Link href="/docs/linux">Linux</Link></li>
+        <li><a href="/docs/mac">macOS</a></li>
+        <li><a href="/docs/windows">Windows</a></li>
+        <li><a href="/docs/linux">Linux</a></li>
       </ul>
 
       <div className="border-l-4 border-orange-400 bg-orange-100 dark:bg-orange-900/30 p-4 mt-8 rounded">
