@@ -15,7 +15,7 @@ interface StepsProps {
 
 export function Step({ children, number, title }: StepProps) {
   return (
-    <div className="flex gap-4 pb-6">
+    <div className="relative flex gap-4 pb-6 last:pb-0 before:absolute before:left-4 before:top-6 before:bottom-0 before:w-px before:bg-border last:before:hidden">
       <div className="flex-shrink-0">
         <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">
           {number}
