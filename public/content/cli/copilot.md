@@ -25,8 +25,6 @@ To best add conversation context, [include materials](https://docs.pieces.app/pr
 
 The Pieces Copilot is a powerful, adaptable tool that improves the more you use it, *so use it!*
 
-***
-
 <AccordionGroup>
   <Accordion title="Collaborative Coding Made Easy">
     Generate detailed comments and documentation to improve team collaboration and reduce onboarding time. This helps create a consistent coding and writing style across teams.

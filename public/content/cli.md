@@ -11,7 +11,7 @@ visibility: "PUBLIC"
 
 ## Pieces CLI
 
-The Pieces CLI offers users a straightforward way to manage and utilize saved code snippets through the Pieces Drive. It uses the AI-powered features of the [Pieces Copilot](https://docs.pieces.app/products/cli/copilot), all directly within your terminal.
+The Pieces CLI offers users a simple way to manage and utilize saved code snippets through the Pieces Drive. It uses the AI-powered features of the [Pieces Copilot](https://docs.pieces.app/products/cli/copilot), all directly within your terminal.
 
 * [Pieces Copilot](https://docs.pieces.app/products/cli/copilot): Utilize AI-driven conversations to enhance productivity by offering contextual assistance for your projects. It facilitates understanding of code, writing of comments, troubleshooting, and more by incorporating files and folders as context, with or without the powerful Long-Term Memory Engine (LTM-2).
 
